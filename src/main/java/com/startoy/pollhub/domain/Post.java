@@ -1,14 +1,14 @@
-// src/main/java/com/startoy/pollhub/domain/BoardPost.java
 package com.startoy.pollhub.domain;
 
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "tb_post")
+@Table(name = "posts")
 public class Post {
 
     @Id
@@ -28,7 +28,7 @@ public class Post {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "created_by", length = 20, nullable = false)
@@ -39,4 +39,7 @@ public class Post {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Poll> polls;
 }

@@ -1,4 +1,3 @@
-// src/main/java/com/startoy/pollhub/domain/Option.java
 package com.startoy.pollhub.domain;
 
 import lombok.Data;
@@ -42,4 +41,8 @@ public class PollOption {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "poll_id", insertable = false, updatable = false)
+    private Poll poll;
 }

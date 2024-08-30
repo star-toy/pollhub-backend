@@ -1,10 +1,10 @@
-// src/main/java/com/startoy/pollhub/domain/Poll.java
 package com.startoy.pollhub.domain;
 
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Entity
@@ -36,4 +36,11 @@ public class Poll {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PollOption> options;
 }
