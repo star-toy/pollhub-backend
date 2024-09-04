@@ -20,13 +20,13 @@ public class PostController {
 
     @GetMapping
     @Operation(summary = "Get all posts")
-    public List<PostPost> getAllPosts() {
+    public List<Post> getAllPosts() {
         return postService.getAllPosts();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a post by ID")
-    public Optional<PostPost> getPostById(@PathVariable Long id) {
+    public Optional<Post> getPostById(@PathVariable Long id) {
         return postService.getPostById(id);
     }
 
