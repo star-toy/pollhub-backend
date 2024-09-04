@@ -1,8 +1,8 @@
 package com.startoy.pollhub.domain;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -39,7 +39,7 @@ public class Post {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Poll> polls;
+//
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<Poll> polls;
 }

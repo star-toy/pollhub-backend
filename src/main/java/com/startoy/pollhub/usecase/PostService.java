@@ -1,6 +1,6 @@
 package com.startoy.pollhub.usecase;
 
-import com.startoy.pollhub.domain.PostPost;
+import com.startoy.pollhub.domain.Post;
 import com.startoy.pollhub.adapter.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,24 +15,24 @@ public class PostService {
         this.PostRepository = PostRepository;
     }
 
-    public List<PostPost> getAllPosts() {
+    public List<Post> getAllPosts() {
         return PostRepository.findAll();
     }
 
-    public Optional<PostPost> getPostById(Long id) {
+    public Optional<Post> getPostById(Long id) {
         return PostRepository.findById(id);
     }
 
-    public PostPost createPost(PostPost post) {
+    public Post createPost(Post post) {
         return PostRepository.save(post);
     }
 
-    public PostPost updatePost(Long id, PostPost post) {
-        Optional<PostPost> existingPost = PostRepository.findById(id);
+    public Post updatePost(Long id, Post post) {
+        Optional<Post> existingPost = PostRepository.findById(id);
         if (existingPost.isPresent()) {
-            PostPost toUpdate = existingPost.get();
+            Post toUpdate = existingPost.get();
             toUpdate.setTitle(post.getTitle());
-            toUpdate.setContent(post.getContent());
+//            toUpdate.setContent(post.getContent());
             return PostRepository.save(toUpdate);
         }
         return null;

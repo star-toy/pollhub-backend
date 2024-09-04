@@ -3,7 +3,6 @@ package com.startoy.pollhub.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
-//import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
