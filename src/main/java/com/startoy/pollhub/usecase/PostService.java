@@ -18,7 +18,6 @@ public class PostService {
     public List<Post> getAllPosts() {
         return PostRepository.findAll();
     }
-
     public Optional<Post> getPostById(Long id) {
         return PostRepository.findById(id);
     }
@@ -32,7 +31,6 @@ public class PostService {
         if (existingPost.isPresent()) {
             Post toUpdate = existingPost.get();
             toUpdate.setTitle(post.getTitle());
-//            toUpdate.setContent(post.getContent());
             return PostRepository.save(toUpdate);
         }
         return null;
