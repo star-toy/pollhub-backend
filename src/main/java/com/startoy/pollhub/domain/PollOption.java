@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "ph_option")
-public class PollOption {
+public class PollOption extends BaseEntities{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +29,6 @@ public class PollOption {
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "created_by", length = 20, nullable = false)
-    private String createdBy;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "updated_by", length = 20)
-    private String updatedBy;
 
     @ManyToOne
     @JoinColumn(name = "poll_id", insertable = false, updatable = false)
