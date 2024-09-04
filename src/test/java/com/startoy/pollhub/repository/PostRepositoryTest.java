@@ -13,6 +13,7 @@ import java.util.stream.LongStream;
 @SpringBootTest
 @Log4j2
 public class PostRepositoryTest {
+
     @Autowired
     private PostRepository postRepository;
 

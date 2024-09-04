@@ -48,4 +48,5 @@ public class Poll{
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
 }
