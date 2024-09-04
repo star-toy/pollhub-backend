@@ -1,15 +1,19 @@
 package com.startoy.pollhub.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "ph_poll")
-public class Poll {
+public class Poll{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +29,16 @@ public class Poll {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PollOption> options;
+
+    @CreatedDate     //생성시간 설정
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "created_by", length = 20, nullable = false)
     private String createdBy;
@@ -37,10 +49,4 @@ public class Poll {
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
-
-    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PollOption> options;
 }
