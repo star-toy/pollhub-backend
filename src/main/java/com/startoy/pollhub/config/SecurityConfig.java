@@ -14,8 +14,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/api/session/**").permitAll()  // 특정 패턴 허용
-                        .anyRequest().authenticated()  // 그 외 요청은 인증 필요
+                        .requestMatchers("/", "/api/session/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**").permitAll()  // Swagger 관련 경로 허용
+                        .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/session/**")  // 특정 경로에 대해 CSRF 보호 비활성화
