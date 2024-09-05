@@ -7,7 +7,6 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -51,9 +50,8 @@ public class Poll{
     @JoinColumn(name = "post_id")
     @ToString.Exclude // Lombok에 의한 toString() 메서드 생성 시, 양방향 관계 필드를 제외하여, 해당 필드를 숨기고 순환 참조 방지
     @JsonIgnore // Jackson으로 JSON 직렬화/역직렬화 시, 순환 관계가 있는 필드를 호출하지 않고 무시하여, 무한 재귀 호출 방지
-     private Post post;
+    private Post post;
 
     @OneToMany(mappedBy = "poll", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    // @ToString.Exclude // 무한 재귀 호출을 방지를 위해, 자동 생성된 toString() 메서드에서 특정 필드를 제외
     private List<PollOption> options;
 }
