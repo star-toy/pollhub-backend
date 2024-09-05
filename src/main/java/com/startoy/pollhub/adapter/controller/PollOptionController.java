@@ -3,20 +3,19 @@ package com.startoy.pollhub.adapter.controller;
 import com.startoy.pollhub.domain.PollOption;
 import com.startoy.pollhub.usecase.PollOptionService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/options")
 public class PollOptionController {
-
+    @Autowired
     private final PollOptionService pollOptionService;
-
-    public PollOptionController(PollOptionService pollOptionService) {
-        this.pollOptionService = pollOptionService;
-    }
 
     @GetMapping
     @Operation(summary = "Get all poll options")

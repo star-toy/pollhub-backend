@@ -3,22 +3,22 @@ package com.startoy.pollhub.adapter.controller;
 import com.startoy.pollhub.domain.Post;
 import com.startoy.pollhub.usecase.PostService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
 
+    @Autowired
     private final PostService postService;
 
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
-
-    // 모든 게시글을 조회
     @GetMapping
     @Operation(summary = "모든 게시글 조회")
     public List<Post> getAllPosts() {
@@ -26,10 +26,16 @@ public class PostController {
     }
 
     //  특정 ID의 게시글을 조회
-    @GetMapping("/{id}")
-    @Operation(summary = "게시글 조회")
-    public Optional<Post> getPostById(@PathVariable Long id) {
-        return postService.getPostById(id);
+    @GetMapping("/{postId}")
+    @Operation(summary = "게시글 상세 조회")
+    public ResponseEntity<Optional<Post>> getPostById(@PathVariable Long postId) { // 경로 매개변수를 통해 postId 수신
+        Optional<Post> post = postService.getPostById(postId); // PostService를 통해 게시글과 관련된 모든 데이터 조회
+
+        if (post.isEmpty()) { // 게시글이 존재하지 않을 경우 404 Not Found 응답
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(post); // 게시글이 존재할 경우 200 OK와 함께 게시글 데이터 응답
     }
 
     // 새로운 게시글을 생성
