@@ -6,11 +6,12 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@Entity
+@Builder
+
 @Table(name = "ph_option")
 public class PollOption  {
     @Id
@@ -37,7 +38,7 @@ public class PollOption  {
     @JoinColumn(name = "poll_id", insertable = false, updatable = false)
     private Poll poll;
 
-    @CreatedDate     //생성시간 설정
+    @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -49,4 +50,5 @@ public class PollOption  {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
 }
