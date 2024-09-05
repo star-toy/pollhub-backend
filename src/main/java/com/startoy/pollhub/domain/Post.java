@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -24,7 +25,7 @@ public class Post {
     private String title;
 
     @Column(name = "file_id")
-    private Long fileId;
+    private UUID fileId;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;

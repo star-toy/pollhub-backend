@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -15,9 +16,9 @@ import java.time.LocalDateTime;
 public class FileStorage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "file_id", nullable = false, updatable = false)
-    private Long fileId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID fileId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "file_content_type", nullable = false)
