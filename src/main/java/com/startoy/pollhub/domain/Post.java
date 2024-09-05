@@ -1,11 +1,12 @@
 package com.startoy.pollhub.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -44,6 +45,8 @@ public class Post {
     private String updatedBy;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Poll> polls;
+//    @ToString.Exclude // 무한 재귀 호출을 방지를 위해, 자동 생성된 toString() 메서드에서 특정 필드를 제외
+//    @JsonIgnore // Jackson JSON 변환 시 제외
+    private List<Poll> polls;
 
 }
