@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,10 +22,10 @@ public class Poll{
     @Column(name = "poll_id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "post_category", nullable = false, length = 255)
-    private String postCategory;
+    @Column(name = "poll_category", nullable = false, length = 255)
+    private String pollCategory;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "title", nullable = false, length = 255)
     private String title;
 
     @Column(name = "expires_at")
@@ -38,7 +39,7 @@ public class Poll{
     private Post post;
 
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PollOption> options;
+    private List<PollOption> options;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
