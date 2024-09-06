@@ -1,30 +1,45 @@
 package com.startoy.pollhub.adapter.controller;
 
+import com.startoy.pollhub.adapter.repository.PostRepository;
 import com.startoy.pollhub.domain.Post;
 import com.startoy.pollhub.usecase.PostService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.*;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
+@Log4j2
 @RequestMapping("/api/posts")
 public class PostController {
 
-    @Autowired
     private final PostService postService;
+    private final PostRepository postRepository;
+
 
     @GetMapping
     @Operation(summary = "모든 게시글 조회")
-    public List<Post> getAllPosts() {
-        return postService.findAllPosts();
+    public ResponseEntity<List<Post>> getAllPosts() {
+        List<Post> posts = postService.findAllPosts();
+
+        if (posts.isEmpty()) {
+            // 게시글이 없을 경우 빈 목록과 함께 200 OK 반환
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        // 게시글이 있을 경우 게시글 목록과 함께 200 OK 반환
+        return ResponseEntity.ok(posts);
     }
+
 
     //  특정 ID의 게시글을 조회
     @GetMapping("/{postId}")
@@ -40,6 +55,7 @@ public class PostController {
     }
 
 
+    // 게시글 등록
     @PostMapping
     @Operation(summary = "새로운 게시글 생성")
     public ResponseEntity<Post> createPost(@Valid @RequestBody Post post) {
@@ -51,18 +67,38 @@ public class PostController {
         // return "redirect:/board/register"; 게시글 등록 후 redirect 될 화면 명시 예정
     }
 
-    // 특정 ID의 게시글을 업데이트
-    @PutMapping("/{id}")
-    @Operation(summary = "게시글 수정")
-    public Post updatePost(@PathVariable Long id, @RequestBody Post post) {
-        return postService.updatePost(id, post);
+
+    // 특정 ID의 게시글을 수정
+    @PutMapping("/{postId}")
+    @Operation(summary = "특정 게시글 수정")
+    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @Valid @RequestBody Post post) {
+        try {
+
+            Post updatedPost = postService.updatePost(postId, post);
+            return ResponseEntity.ok(updatedPost);
+
+        } catch (RuntimeException e) {
+            log.error("게시물 수정 중 오류 발생: {}",e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
 
     // 특정 ID의 게시글을 삭제
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}")
     @Operation(summary = "게시글 삭제")
-    public void deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+    ResponseEntity<String> deletePost(@PathVariable Long postId) {
+        try {
+            postService.deletePost(postId);
+            return ResponseEntity.ok().build();  // 삭제 성공 시 200 OK 반환
+
+        } catch (EntityNotFoundException e) {
+
+            return ResponseEntity.notFound().build();  // 게시글이 없는 경우 404 Not Found 반환
+        } catch (Exception e) {
+
+            return ResponseEntity.notFound().build();
+        }
     }
 }
