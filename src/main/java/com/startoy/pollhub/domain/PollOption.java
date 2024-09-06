@@ -2,9 +2,9 @@ package com.startoy.pollhub.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -13,9 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 @Table(name = "ph_option")
 public class PollOption  {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_id", nullable = false, updatable = false)
@@ -30,11 +30,16 @@ public class PollOption  {
     @Column(name = "voted_count")
     private Integer votedCount;
 
+    //@NotEmpty(message = "옵션 설명은 비어 있을 수 없습니다.")
     @Column(name = "option_text", length = 255)
     private String optionText;
 
+
+    // option 에 첨부될 사진등에 대한 파일 형식 검사(추후에 영상 및 gif 도 추가하면 될 듯합니다.)
+   // @Pattern(regexp = ".*\\.(jpg|png|jpeg)$", message = "파일 형식은 JPG, PNG, JPEG 만 허용됩니다.")
     @Column(name = "file_id")
     private UUID fileId;
+
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
@@ -51,5 +56,6 @@ public class PollOption  {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
 
 }
