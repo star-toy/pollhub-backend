@@ -44,7 +44,10 @@ public class PollOptionService {
     @Transactional
     public PollOption createOption(PollOption option) {
         try {
+            log.info(option);
             // Poll의 존재 확인
+            //log.info("getpoll 의 값 : " + option.getPoll()); //
+            //log.info("getpoll.getId 의 값 : " + option.getPoll().getId());
             if (option.getPoll() == null || option.getPoll().getId() == null) {
                 log.error("PollOption 생성 실패: 연관된 Poll이 없습니다.");
                 throw new IllegalArgumentException("Poll을 참조해야 합니다.");

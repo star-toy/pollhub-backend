@@ -1,5 +1,6 @@
 package com.startoy.pollhub.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -24,7 +25,8 @@ public class PollOption  {
     @ManyToOne(fetch = FetchType.LAZY) // FetchType.LAZY : 관련 엔티티를 실제로 사용할 때까지 로딩을 지연시켜 성능을 최적화
     @JoinColumn(name = "poll_id")
     @ToString.Exclude // Lombok에 의한 toString() 메서드 생성 시, 양방향 관계 필드를 제외하여, 해당 필드를 숨기고 순환 참조 방지
-    @JsonIgnore // Jackson으로 JSON 직렬화/역직렬화 시, 순환 관계가 있는 필드를 호출하지 않고 무시하여, 무한 재귀 호출 방지
+    //@JsonIgnore // Jackson으로 JSON 직렬화/역직렬화 시, 순환 관계가 있는 필드를 호출하지 않고 무시하여, 무한 재귀 호출 방지
+    @JsonBackReference // JsonIgnore 어노테이션 적용 시 polloption post api 에서 poll_id 를 참조하지 못하는 오류 발생.
     private Poll poll;
 
     @Column(name = "voted_count")
