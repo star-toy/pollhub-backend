@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,8 +51,8 @@ public class PostRepositoryTest {
         LongStream.rangeClosed(1L,20L).forEach(i -> {
             Post post = Post.builder()
                     .title("title" + i)
-                    .fileId(i)
-                    .pollId(1L)
+                    .fileId(UUID.randomUUID())
+                    //.poll_id(1L)
                     .isDeleted(false)
                     .createdBy("createdBy" + i)
                     .build();
