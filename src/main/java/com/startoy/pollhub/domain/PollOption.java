@@ -1,16 +1,19 @@
 package com.startoy.pollhub.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
+@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@Entity
+@Builder
+
 @Table(name = "ph_option")
 public class PollOption  {
     @Id
@@ -18,8 +21,11 @@ public class PollOption  {
     @Column(name = "option_id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "poll_id", nullable = false)
-    private Long pollId;
+    @ManyToOne(fetch = FetchType.LAZY) // FetchType.LAZY : 관련 엔티티를 실제로 사용할 때까지 로딩을 지연시켜 성능을 최적화
+    @JoinColumn(name = "poll_id")
+    @ToString.Exclude // Lombok에 의한 toString() 메서드 생성 시, 양방향 관계 필드를 제외하여, 해당 필드를 숨기고 순환 참조 방지
+    @JsonIgnore // Jackson으로 JSON 직렬화/역직렬화 시, 순환 관계가 있는 필드를 호출하지 않고 무시하여, 무한 재귀 호출 방지
+    private Poll poll;
 
     @Column(name = "voted_count")
     private Integer votedCount;
@@ -28,16 +34,12 @@ public class PollOption  {
     private String optionText;
 
     @Column(name = "file_id")
-    private Long fileId;
+    private UUID fileId;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    @ManyToOne
-    @JoinColumn(name = "poll_id", insertable = false, updatable = false)
-    private Poll poll;
-
-    @CreatedDate     //생성시간 설정
+    @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -49,4 +51,5 @@ public class PollOption  {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
 }
