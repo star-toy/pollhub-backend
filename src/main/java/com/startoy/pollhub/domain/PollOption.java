@@ -37,8 +37,8 @@ public class PollOption  {
     private String optionText;
 
 
-    // option 에 첨부될 사진등에 대한 파일 형식 검사(추후에 영상 및 gif 도 추가하면 될 듯합니다.)
-   // @Pattern(regexp = ".*\\.(jpg|png|jpeg)$", message = "파일 형식은 JPG, PNG, JPEG 만 허용됩니다.")
+    // option 에 첨부될 사진등에 대한 파일 형식 검사(추후에 영상 및 gif 도 추가하면 될 듯 합니다.)
+   // @Pattern(regexp = ".*\\.(jpg|png|jpeg)$", message = "파일 형식은 JPG, PNG, JPEG 만 허용됨.")
     @Column(name = "file_id")
     private UUID fileId;
 
