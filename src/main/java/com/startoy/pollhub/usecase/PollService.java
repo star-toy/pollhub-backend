@@ -33,7 +33,7 @@ public class PollService {
 
         // 각 투표에 대해 선택지 목록을 조회하여 설정
         for (Poll poll : polls) {
-            List<PollOption> options = pollOptionService.getOptionsByPollId(poll.getId());
+            List<PollOption> options = pollOptionService.findOptionsByPollId(poll.getId());
             poll.setOptions(options); // 조회된 선택지 목록을 투표에 설정
         }
 
@@ -49,18 +49,21 @@ public class PollService {
     @Transactional
     public Poll createPoll(Poll poll) {
         try {
-            Poll savedPoll = pollRepository.save(poll);
 
-            // PollOption 저장
+            // PollOption 이 없을 때
             if (poll.getOptions() != null && !poll.getOptions().isEmpty()) {
-                for (PollOption option : poll.getOptions()) {
-                    option.setPoll(savedPoll); // Poll과 연결 설정
-                    pollOptionRepository.save(option); // PollOption 저장
-                }
-            } else {
                 log.warn("생성된 투표에 투표 옵션이 없음.");
+                return pollRepository.save(poll); // Poll만 저장하고 반환
             }
 
+            // poll 저장
+            Poll savedPoll = pollRepository.save(poll);
+
+            // poll option 저장
+            for (PollOption option : poll.getOptions()) {
+                option.setPoll(savedPoll); // Poll과 연결 설정
+                pollOptionRepository.save(option); // PollOption 저장
+            }
             return savedPoll;
 
         } catch (DataIntegrityViolationException e) {
