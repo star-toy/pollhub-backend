@@ -30,7 +30,7 @@ public class PollOptionController {
     @GetMapping("/poll/{pollId}") 
     @Operation(summary = "특정 poll_id에 해당하는 투표 옵션 전체 조회")
     public ResponseEntity<List<PollOption>> findByPollId(@PathVariable Long pollId) {
-        List<PollOption> options = pollOptionService.getOptionsByPollId(pollId);
+        List<PollOption> options = pollOptionService.findOptionsByPollId(pollId);
 
         if (options.isEmpty()) { // 유저가 투표는 생성하고 옵션은 생성하지 않았을 경우
             // 200 OK 상태와 빈 목록을 반환

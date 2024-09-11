@@ -28,7 +28,7 @@ public class PostController {
 
     @GetMapping
     @Operation(summary = "모든 게시글 조회")
-    public ResponseEntity<List<Post>> getAllPosts() {
+    public ResponseEntity<List<Post>> findAllPosts() {
         List<Post> posts = postService.findAllPosts();
 
         if (posts.isEmpty()) {

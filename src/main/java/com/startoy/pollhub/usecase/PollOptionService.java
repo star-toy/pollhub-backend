@@ -26,7 +26,7 @@ public class PollOptionService {
     private final PollRepository pollRepository;
 
 
-    public List<PollOption> getOptionsByPollId(Long pollId) {
+    public List<PollOption> findOptionsByPollId(Long pollId) {
         // 특정 투표에 대한 모든 선택지 조회
         return pollOptionRepository.findByPollId(pollId);
     }
