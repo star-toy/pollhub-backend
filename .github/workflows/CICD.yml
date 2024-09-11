@@ -66,7 +66,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           source: 'build/libs/*.jar'
-          target: '/home/bitnami/{project-name}/'
+          target: '/home/ubuntu/{project-name}/'
 
       # 서버에서 애플리케이션 실행
       - name: 서버에서 애플리케이션 실행
