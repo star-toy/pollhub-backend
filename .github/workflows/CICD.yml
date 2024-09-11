@@ -78,3 +78,6 @@ jobs:
           script: |
             pkill -f 'java -jar' || true
             nohup java -jar /home/ubuntu/{project-name}/your-app.jar > /dev/null 2>&1 &
+          #debug: true
+          timeout: 300s  # 타임아웃 시간 늘리기
+          command_timeout: 300s
