@@ -77,4 +77,4 @@ jobs:
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
             pkill -f 'java -jar' || true
-            nohup java -jar /home/bitnami/{project-name}/your-app.jar > /dev/null 2>&1 &
+            nohup java -jar /home/ubuntu/{project-name}/your-app.jar > /dev/null 2>&1 &
