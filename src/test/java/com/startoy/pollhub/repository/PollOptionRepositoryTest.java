@@ -16,15 +16,15 @@ public class PollOptionRepositoryTest {
 
     private PollOptionService pollOptionService;
 
-    @Test
-    void createPollOption() {
-        Long option_id = 1L;
-        Long poll_id = 1L;
-
-        //PollOption pollOption = new PollOption(option_id, poll_id, 1,"테스트",1L,false,);
-
-
-    }
+//    @Test
+//    void createPollOption() {
+//        Long option_id = 1L;
+//        Long poll_id = 1L;
+//
+//        //PollOption pollOption = new PollOption(option_id, poll_id, 1,"테스트",1L,false,);
+//
+//
+//    }
 
 
 }
