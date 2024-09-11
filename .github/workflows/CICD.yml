@@ -63,7 +63,7 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
-          username: ${{ env.LIGHTSAIL_USERNAME }}
+          username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           source: 'build/libs/*.jar'
           target: '/home/bitnami/{project-name}/'
@@ -73,7 +73,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
-          username: ${{ env.LIGHTSAIL_USERNAME }}
+          username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
             pkill -f 'java -jar' || true
