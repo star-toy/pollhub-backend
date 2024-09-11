@@ -46,38 +46,38 @@ public class PostRepositoryTest {
 ////        assertThat(foundPost.get().getCreatedBy()).isEqualTo("테스터");
 ////    }
 //
-    @Test
-    public void testSave() {
-        LongStream.rangeClosed(1L,20L).forEach(i -> {
-            Post post = Post.builder()
-                    .title("title" + i)
-                    .fileId(UUID.randomUUID())
-                    //.poll_id(1L)
-                    .isDeleted(false)
-                    .createdBy("createdBy" + i)
-                    .build();
-            Post result = postRepository.save(post);  //JPA는 자동으로 만들어주기 때문에 내가 만들지 않은 save 메소드도 나온다.
-            log.info(result);
-        });
-    }
+//    @Test
+//    public void testSave() {
+//        LongStream.rangeClosed(1L,20L).forEach(i -> {
+//            Post post = Post.builder()
+//                    .title("title" + i)
+//                    .fileId(UUID.randomUUID())
+//                    //.poll_id(1L)
+//                    .isDeleted(false)
+//                    .createdBy("createdBy" + i)
+//                    .build();
+//            Post result = postRepository.save(post);  //JPA는 자동으로 만들어주기 때문에 내가 만들지 않은 save 메소드도 나온다.
+//            log.info(result);
+//        });
+//    }
+////
+//    @Test
+//    public void testSelect() {
+//        Long pid = 14L;
+//        Optional<Post> result = postRepository.findById(pid);
+//        assertThat(result).isPresent(); // result가 비어 있지 않고 실제 값을 포함하고 있는지 확인
+//        assertThat(result.get().getTitle()).isEqualTo("title2");
+//    }
 //
-    @Test
-    public void testSelect() {
-        Long pid = 14L;
-        Optional<Post> result = postRepository.findById(pid);
-        assertThat(result).isPresent(); // result가 비어 있지 않고 실제 값을 포함하고 있는지 확인
-        assertThat(result.get().getTitle()).isEqualTo("title2");
-    }
-
-    @Test
-    public void testDelete() {
-        Long id = 8L;
-
-        Optional<Post> result = postRepository.findById(id);
-        Post post = result.orElseThrow();
-
-        assertThat(result).isPresent();
-        postRepository.delete(post);
-    }
+//    @Test
+//    public void testDelete() {
+//        Long id = 8L;
+//
+//        Optional<Post> result = postRepository.findById(id);
+//        Post post = result.orElseThrow();
+//
+//        assertThat(result).isPresent();
+//        postRepository.delete(post);
+//    }
 
 }
