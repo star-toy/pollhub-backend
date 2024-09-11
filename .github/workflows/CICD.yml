@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '22'
+          distribution: 'temurin' # Temurin JDK 사용
 
       # Gradle 의존성 설치 및 빌드
       - name: Gradle 빌드
