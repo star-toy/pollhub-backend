@@ -57,6 +57,7 @@ public class PostService {
     @Transactional
     public Post createPost(Post post) {
         Post savedPost;
+
         try {
             // Post 저장
             savedPost = postRepository.save(post);
@@ -75,6 +76,7 @@ public class PostService {
             // Poll과 PollOption 간의 참조 설정
         for (Poll poll : savedPost.getPolls()) {
             Poll savedPoll;
+
             try {
                 // Poll 저장
                 poll.setPost(savedPost);
