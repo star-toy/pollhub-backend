@@ -23,7 +23,7 @@ jobs:
           --health-cmd="mysqladmin ping --silent" 
           --health-interval=10s 
           --health-timeout=5s 
-          --health-retries=3
+          --health-retries=3  # 이 부분에서 줄바꿈 없이 정확하게 설정
 
     steps:
       # 리포지토리 체크아웃 (현재 브랜치의 코드를 체크아웃)
