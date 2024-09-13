@@ -76,7 +76,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
-            screen -dmS app java -jar /home/ubuntu/pollhub-backend/pollhub-backend-0.0.1-SNAPSHOT.jar
+            screen -dmS app java -jar /home/ubuntu/pollhub-backend/build/libs/pollhub-backend-0.0.1-SNAPSHOT.jar
           debug: true
           timeout: 1500s  # 타임아웃 시간 늘리기
           command_timeout: 1500s
