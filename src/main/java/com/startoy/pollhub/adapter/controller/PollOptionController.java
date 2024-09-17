@@ -20,7 +20,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @RestController
 @Log4j2
-@RequestMapping("/api/options")
+@RequestMapping("/v1/options")
 public class PollOptionController {
 
     private final PollOptionService pollOptionService;

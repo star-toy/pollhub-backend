@@ -19,7 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @RestController
 @Log4j2
-@RequestMapping("/api/posts")
+@RequestMapping("/v1/posts")
 public class PostController {
 
     private final PostService postService;
