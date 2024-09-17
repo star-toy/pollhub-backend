@@ -32,12 +32,6 @@ public class PollOptionService {
     }
 
 
-    // 투표 옵션 전체 목록 조회
-//    public List<PollOption> findAllOptions() {
-//        return pollOptionRepository.findAll();
-//    }
-
-
     // 특정 ID의 투표 옵션 조회
     public PollOption findOptionById(Long optionId) {
         Optional<PollOption> optionalPollOption = pollOptionRepository.findById(optionId);

@@ -6,6 +6,7 @@ import com.startoy.pollhub.adapter.repository.PollRepository;
 import com.startoy.pollhub.domain.PollOption;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,15 +17,15 @@ import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor  // final 필드만 포함된 생성자 생성
 @Service
 @Log4j2
 public class PollService {
 
-
     private final PollRepository pollRepository;
     private final PollOptionRepository pollOptionRepository;
     private final PollOptionService pollOptionService;
+    // private final @Lazy PostService postService; // 순환 의존성 때문에 PostService 필요 시 지연 주입
 
 
     public List<Poll> getPollsByPostId(Long postId) {
