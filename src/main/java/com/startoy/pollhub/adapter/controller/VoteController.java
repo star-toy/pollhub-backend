@@ -1,6 +1,7 @@
 package com.startoy.pollhub.adapter.controller;
 
 import com.startoy.pollhub.usecase.VoteService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/vote")
+@Tag(name = "투표 행위 Vote", description = "투표 행위 관리 API")
 public class VoteController {
 
     private final VoteService voteService;

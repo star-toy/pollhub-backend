@@ -3,6 +3,7 @@ package com.startoy.pollhub.adapter.controller;
 import com.startoy.pollhub.domain.Poll;
 import com.startoy.pollhub.usecase.PollService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @RestController
 @Log4j2
 @RequestMapping("/v1/polls")
+@Tag(name = "투표 Poll", description = "투표 관리 API")
 public class PollController {
 
     private final PollService pollService;

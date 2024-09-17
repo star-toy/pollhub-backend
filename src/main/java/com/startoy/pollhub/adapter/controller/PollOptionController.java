@@ -4,6 +4,7 @@ import com.startoy.pollhub.domain.Poll;
 import com.startoy.pollhub.domain.PollOption;
 import com.startoy.pollhub.usecase.PollOptionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @RestController
 @Log4j2
 @RequestMapping("/v1/options")
+@Tag(name = "투표 선택지 Option", description = "투표 옵션 관리 API")
 public class PollOptionController {
 
     private final PollOptionService pollOptionService;

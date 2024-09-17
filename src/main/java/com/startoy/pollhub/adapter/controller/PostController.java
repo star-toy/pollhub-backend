@@ -4,6 +4,7 @@ import com.startoy.pollhub.adapter.repository.PostRepository;
 import com.startoy.pollhub.domain.Post;
 import com.startoy.pollhub.usecase.PostService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.*;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @RestController
 @Log4j2
 @RequestMapping("/v1/posts")
+@Tag(name = "게시글 Post", description = "게시글 관리 API")
 public class PostController {
 
     private final PostService postService;
