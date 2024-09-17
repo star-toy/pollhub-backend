@@ -19,7 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @RestController
 @Log4j2
-@RequestMapping("/api/polls")
+@RequestMapping("/v1/polls")
 public class PollController {
 
     private final PollService pollService;
