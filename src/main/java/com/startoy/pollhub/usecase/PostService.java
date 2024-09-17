@@ -8,6 +8,7 @@ import com.startoy.pollhub.domain.Post;
 import com.startoy.pollhub.adapter.repository.PostRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 @Log4j2
 public class PostService {
-
 
     private final PostRepository postRepository;
     private final PollService pollService;

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.*;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @Log4j2
-@RequestMapping("/api/posts")
+@RequestMapping("/v1/posts")
 @Tag(name = "게시글 Post", description = "게시글 관리 API")
 public class PostController {
 
     private final PostService postService;
-    private final PostRepository postRepository;
 
 
+    // 모든 게시글 조회
     @GetMapping
     @Operation(summary = "모든 게시글 조회")
     public ResponseEntity<List<Post>> findAllPosts() {
