@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @Log4j2
 @RequestMapping("/v1/options")
