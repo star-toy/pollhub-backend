@@ -1,6 +1,7 @@
 package com.startoy.pollhub.adapter.controller;
 
 import com.startoy.pollhub.usecase.VoteService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/vote")
+@Tag(name = "투표 행위 Vote", description = "투표 행위 관리 API")
 public class VoteController {
 
     @Autowired
