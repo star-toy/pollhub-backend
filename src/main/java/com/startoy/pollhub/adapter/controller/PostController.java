@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @Log4j2
-@RequestMapping("/v1/posts")
+@RequestMapping("/api/v1/posts")
 @Tag(name = "게시글 Post", description = "게시글 관리 API")
 public class PostController {
 

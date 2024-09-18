@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @Log4j2
-@RequestMapping("/v1/polls")
+@RequestMapping("/api/v1/polls")
 @Tag(name = "투표 Poll", description = "투표 관리 API")
 public class PollController {
 
