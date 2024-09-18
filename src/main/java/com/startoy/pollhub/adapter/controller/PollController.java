@@ -6,17 +6,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -55,7 +52,6 @@ public class PollController {
     }
 
 
-
     // 특정 ID의 투표 수정
     @PutMapping("/{pollId}")
     @Operation(summary = "투표 수정")
@@ -73,6 +69,7 @@ public class PollController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     // 특정 ID의 투표 삭제
     @DeleteMapping("/{pollId}")

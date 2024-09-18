@@ -1,16 +1,13 @@
 package com.startoy.pollhub.adapter.controller;
 
-import com.startoy.pollhub.adapter.repository.PostRepository;
 import com.startoy.pollhub.domain.Post;
 import com.startoy.pollhub.usecase.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.*;
-import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -104,4 +101,5 @@ public class PostController {
             return ResponseEntity.notFound().build();
         }
     }
+
 }

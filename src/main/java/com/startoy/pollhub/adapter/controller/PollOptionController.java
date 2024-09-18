@@ -1,23 +1,19 @@
 package com.startoy.pollhub.adapter.controller;
 
-import com.startoy.pollhub.domain.Poll;
 import com.startoy.pollhub.domain.PollOption;
 import com.startoy.pollhub.usecase.PollOptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,6 +38,7 @@ public class PollOptionController {
 
         return ResponseEntity.ok(options);
     }
+
 
     //  특정 ID의 투표 옵션 조회
     @GetMapping("/{optionId}")
@@ -114,4 +111,5 @@ public class PollOptionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("투표 옵션 삭제 중 오류가 발생."); // 500 응답 반환
         }
     }
+
 }
