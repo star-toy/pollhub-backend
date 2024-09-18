@@ -32,24 +32,30 @@ public class FileStorageService {
             // 폴더 존재 여부 확인
             Path path = Path.of(uploadDir);
             if (!Files.exists(path)) {
-                Files.createDirectories(path);
+                Files.createDirectories(path); // 폴더 생성 실패 시 IOException 발생 가능
             }
 
             String fileId = UUID.randomUUID().toString();
             String fileName = file.getOriginalFilename(); // File Extension 포함 // ex) filename.png
 
-            if(fileName == null || !fileName.contains(".")) {
-                throw new IllegalArgumentException("Invalid file name: The file name is either null or missing a file extension.");
+            if (fileName == null || !fileName.contains(".")) {
+                throw new FileValidationException("Invalid file name: The file name is either null or missing a file extension.");
             }
 
             // 파일 확장자 추출
-            String fileExtension = fileName.split("\\.")[1];
+            String[] fileNameParts = fileName.split("\\.");
+            if (fileNameParts.length < 2) {
+                throw new FileValidationException("File must have an extension");
+            }
+
+            String fileExtension = fileNameParts[1];
+
             // 중복 파일명 방지
-            String fileFullName = fileName.split("\\.")[0] + "_" + fileId + "." + fileExtension; // ex) filename_uuid.png'
+            String fileFullName = fileNameParts[0] + "_" + fileId + "." + fileExtension; // ex) filename_uuid.png
 
             // 파일 저장
             Path filePath = path.resolve(fileFullName);
-            Files.copy(file.getInputStream(), filePath);
+            Files.copy(file.getInputStream(), filePath); // 파일 저장 실패 시 IOException 발생
 
             // FileStorage 객체 생성
             FileStorage fileStorage = FileStorage.builder()
@@ -66,8 +72,28 @@ public class FileStorageService {
 
             return fileStorageRepository.save(fileStorage);
 
+        } catch (FileValidationException e) {
+            throw e; // 클라이언트 문제는 그대로 전달
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file", e);
+            // 파일 저장 관련 오류는 서버 문제로 구분
+            throw new FileStorageException("Failed to store file on the server", e);
+        } catch (Exception e) {
+            // 기타 예외 처리
+            throw new FileStorageException("An unexpected error occurred while processing the file", e);
+        }
+    }
+
+    // Custom Exception for file validation issues
+    public static class FileValidationException extends RuntimeException {
+        public FileValidationException(String message) {
+            super(message);
+        }
+    }
+
+    // Custom Exception for file storage issues
+    public static class FileStorageException extends RuntimeException {
+        public FileStorageException(String message, Throwable cause) {
+            super(message, cause);
         }
     }
 
