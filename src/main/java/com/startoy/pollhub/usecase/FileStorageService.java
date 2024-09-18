@@ -1,15 +1,12 @@
 package com.startoy.pollhub.usecase;
 
-import com.startoy.pollhub.domain.FileStorage;
 import com.startoy.pollhub.adapter.repository.FileStorageRepository;
+import com.startoy.pollhub.domain.FileStorage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,7 +20,7 @@ public class FileStorageService {
     private final FileStorageRepository fileStorageRepository;
     private final String uploadDir = "/path/to/upload/directory";
 
-    public FileStorage saveFile(MultipartFile file) throws IOException {
+    public FileStorage saveFile(MultipartFile file, String uploaderIp) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File must not be null or empty");
         }
@@ -53,7 +50,7 @@ public class FileStorageService {
                     .fileExtension(fileExtension)
                     .isDeleted(false)
                     .createdAt(LocalDateTime.now())
-                    .createdBy("system")  // 사용자에 따라 변경 필요
+                    .createdBy(uploaderIp)
                     .build();
 
             return fileStorageRepository.save(fileStorage);
