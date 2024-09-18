@@ -50,7 +50,4 @@ public class FileStorage {
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
-    public enum FileContentType {
-        IMAGE, VIDEO, URL
-    }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,24 +30,34 @@ public class FileStorageController {
 
         Map<String, String> response = new HashMap<>();
 
-        if (file == null || file.isEmpty()) {
-            response.put("message", "File must not be null or empty");
-            return ResponseEntity.badRequest().body(response);
-        }
-
         String uploaderIp = userService.getClientIp(request);
 
-        try {
+        try{
+            // 파일 유효성 검사
+            if (file == null || file.isEmpty()) {
+                response.put("message", "File must not be null or empty");
+                return ResponseEntity.badRequest().body(response); // 400 Bad Request
+            }
+
             // 파일 저장
             fileStorageService.saveFile(file, uploaderIp);
             response.put("message", "File uploaded successfully");
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response); // 200 OK
+
         } catch (IllegalArgumentException e) {
+            // 잘못된 파일 형식 등 클라이언트 문제
             response.put("message", e.getMessage());
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body(response); // 400 Bad Request
+
+        } catch (IOException e) {
+            // 파일 저장 중 발생한 IO 오류 (서버 문제)
+            response.put("message", "Failed to store file due to server error");
+            return ResponseEntity.status(500).body(response); // 500 Internal Server Error
+
         } catch (Exception e) {
-            response.put("message", "An error occurred while uploading the file");
-            return ResponseEntity.status(500).body(response);
+            // 기타 예상하지 못한 서버 오류
+            response.put("message", "An unexpected error occurred while uploading the file");
+            return ResponseEntity.status(500).body(response); // 500 Internal Server Error
         }
     }
 
