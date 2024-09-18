@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/files")
@@ -19,14 +22,16 @@ public class FileStorageController {
     private final UserService userService;
 
 
-    @PostMapping("/upload")
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = "application/json", consumes = "multipart/form-data")
-    public ResponseEntity<String> uploadFile(
+    public ResponseEntity<Map<String, String>> uploadFile(
             @RequestPart("file") MultipartFile file,
             HttpServletRequest request) {
 
+        Map<String, String> response = new HashMap<>();
+
         if (file == null || file.isEmpty()) {
-            return ResponseEntity.badRequest().body("File must not be null or empty");
+            response.put("message", "File must not be null or empty");
+            return ResponseEntity.badRequest().body(response);
         }
 
         String uploaderIp = userService.getClientIp(request);
@@ -34,11 +39,14 @@ public class FileStorageController {
         try {
             // 파일 저장
             fileStorageService.saveFile(file, uploaderIp);
-            return ResponseEntity.ok("File uploaded successfully");
+            response.put("message", "File uploaded successfully");
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("An error occurred while uploading the file");
+            response.put("message", "An error occurred while uploading the file");
+            return ResponseEntity.status(500).body(response);
         }
     }
 
