@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface FileStorageRepository extends JpaRepository<FileStorage, UUID> {
+public interface FileStorageRepository extends JpaRepository<FileStorage, String> {
 }

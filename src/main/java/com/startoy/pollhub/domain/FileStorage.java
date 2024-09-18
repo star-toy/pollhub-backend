@@ -16,9 +16,8 @@ import java.util.UUID;
 public class FileStorage {
 
     @Id
-    @Column(name = "file_id", nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID fileId;
+    @Column(name = "file_id", nullable = false, updatable = false, columnDefinition = "CHAR(36)")
+    private String fileId;
 
     @Column(name = "file_name", length = 255, nullable = false)
     private String fileName;

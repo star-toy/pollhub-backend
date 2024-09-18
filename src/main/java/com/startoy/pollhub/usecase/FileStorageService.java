@@ -20,7 +20,9 @@ public class FileStorageService {
     private final FileStorageRepository fileStorageRepository;
     private final String uploadDir = "/path/to/upload/directory";
 
+
     public FileStorage saveFile(MultipartFile file, String uploaderIp) throws IOException {
+
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File must not be null or empty");
         }
@@ -28,23 +30,32 @@ public class FileStorageService {
         try {
 
             // 폴더 존재 여부 확인
-            if (!Files.exists(Path.of(uploadDir))) {
-                Files.createDirectories(Path.of(uploadDir));
+            Path path = Path.of(uploadDir);
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+
+            String fileId = UUID.randomUUID().toString();
+            String fileName = file.getOriginalFilename(); // File Extension 포함 // ex) filename.png
+
+            if(fileName == null || !fileName.contains(".")) {
+                throw new IllegalArgumentException("Invalid file name: The file name is either null or missing a file extension.");
             }
 
             // 파일 확장자 추출
-            String fileExtension = getFileExtension(file.getOriginalFilename());
+            String fileExtension = fileName.split("\\.")[1];
+            // 중복 파일명 방지
+            String fileFullName = fileName.split("\\.")[0] + "_" + fileId + "." + fileExtension; // ex) filename_uuid.png'
 
             // 파일 저장
-            String fileName = UUID.randomUUID().toString() + "." + fileExtension;
-            Path filePath = Paths.get(uploadDir).resolve(fileName);
+            Path filePath = path.resolve(fileFullName);
             Files.copy(file.getInputStream(), filePath);
 
             // FileStorage 객체 생성
             FileStorage fileStorage = FileStorage.builder()
-                    .fileId(UUID.randomUUID())
-                    .fileName(file.getOriginalFilename())
-                    .fileFullName(fileName)
+                    .fileId(fileId)
+                    .fileName(fileName)
+                    .fileFullName(fileFullName)
                     .filePath(filePath.toString())
                     .fileFullPath(filePath.toAbsolutePath().toString())
                     .fileExtension(fileExtension)
@@ -60,11 +71,4 @@ public class FileStorageService {
         }
     }
 
-    private String getFileExtension(String fileName) {
-        int lastIndexOfDot = fileName.lastIndexOf('.');
-        if (lastIndexOfDot == -1) {
-            return "";  // 파일 확장자가 없는 경우
-        }
-        return fileName.substring(lastIndexOfDot + 1);
-    }
 }

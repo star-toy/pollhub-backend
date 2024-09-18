@@ -24,12 +24,15 @@ public class FileStorageController {
     public ResponseEntity<String> uploadFile(
             @RequestPart("file") MultipartFile file,
             HttpServletRequest request) {
+
         if (file == null || file.isEmpty()) {
             return ResponseEntity.badRequest().body("File must not be null or empty");
         }
+
         String uploaderIp = userService.getClientIp(request);
 
         try {
+            // 파일 저장
             fileStorageService.saveFile(file, uploaderIp);
             return ResponseEntity.ok("File uploaded successfully");
         } catch (IllegalArgumentException e) {
