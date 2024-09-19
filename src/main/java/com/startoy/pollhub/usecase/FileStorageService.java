@@ -51,7 +51,8 @@ public class FileStorageService {
             String fileExtension = fileNameParts[1];
 
             // 중복 파일명 방지
-            String fileFullName = fileNameParts[0] + "_" + fileId + "." + fileExtension; // ex) filename_uuid.png
+//            String fileFullName = fileNameParts[0] + "_" + fileId + "." + fileExtension;
+            String fileFullName = String.format("%s_%s.%s", fileNameParts[0], fileId, fileExtension); // ex) filename_uuid.png
 
             // 파일 저장
             Path filePath = path.resolve(fileFullName);
