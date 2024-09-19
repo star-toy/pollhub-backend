@@ -18,7 +18,7 @@ public class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "poll_id", nullable = false)
-    private Long pollId;
+    private Long id;
 
     @Column(name = "poll_uid", unique = true, nullable = false, length = 36)
     private String pollUid;
@@ -59,5 +59,4 @@ public class Poll {
     @OneToMany(mappedBy = "poll", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference // 역참조 무시 -> 순환 참조를 방지함
     private List<PollOption> options;
-
 }

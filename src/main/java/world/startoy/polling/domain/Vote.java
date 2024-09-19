@@ -15,18 +15,16 @@ public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vote_id", nullable = false)
-    private Long voteId;
+    private Long id;
 
     @Column(name = "vote_uid", unique = true, nullable = false, length = 36)
     private String voteUid;
 
-    @ManyToOne
-    @JoinColumn(name = "poll_id", nullable = false)
-    private Poll poll;
+    @Column(name = "poll_id", nullable = false)
+    private Long pollId;
 
-    @ManyToOne
-    @JoinColumn(name = "option_id", nullable = false)
-    private PollOption pollOption;
+    @Column(name = "option_id", nullable = false)
+    private Long optionId;
 
     @Column(name = "voter_ip", nullable = false, length = 255)
     private String voterIp;

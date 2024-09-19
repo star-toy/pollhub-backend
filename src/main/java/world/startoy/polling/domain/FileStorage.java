@@ -15,7 +15,7 @@ public class FileStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "file_id", nullable = false)
-    private Long fileId;
+    private Long id;
 
     @Column(name = "file_uid", unique = true, nullable = false, length = 36)
     private String fileUid;

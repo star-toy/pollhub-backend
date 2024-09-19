@@ -18,7 +18,7 @@ public class PollOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "poll_option_id", nullable = false)
-    private Long pollOptionId;
+    private Long id;
 
     @Column(name = "poll_option_uid", unique = true, nullable = false, length = 36)
     private String pollOptionUid;
