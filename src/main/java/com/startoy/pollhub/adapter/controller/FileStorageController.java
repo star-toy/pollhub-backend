@@ -30,17 +30,20 @@ public class FileStorageController {
 
         Map<String, String> response = new HashMap<>();
 
-        String uploaderIp = userService.getClientIp(request);
-
         try{
+
             // 파일 유효성 검사
             if (file == null || file.isEmpty()) {
                 response.put("message", "File must not be null or empty");
                 return ResponseEntity.badRequest().body(response); // 400 Bad Request
             }
 
+            String uploaderIp = userService.getClientIp(request);
+
             // 파일 저장
             fileStorageService.saveFile(file, uploaderIp);
+
+            // 정상 동작 완료
             response.put("message", "File uploaded successfully");
             return ResponseEntity.ok(response); // 200 OK
 

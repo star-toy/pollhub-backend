@@ -38,6 +38,7 @@ public class FileStorageService {
             String fileId = UUID.randomUUID().toString();
             String fileName = file.getOriginalFilename(); // File Extension 포함 // ex) filename.png
 
+            // 파일 유효성 확인
             if (fileName == null || !fileName.contains(".")) {
                 throw new FileValidationException("Invalid file name: The file name is either null or missing a file extension.");
             }
@@ -48,11 +49,11 @@ public class FileStorageService {
                 throw new FileValidationException("File must have an extension");
             }
 
+            String fileNameWithoutExtension = fileNameParts[0];
             String fileExtension = fileNameParts[1];
 
             // 중복 파일명 방지
-//            String fileFullName = fileNameParts[0] + "_" + fileId + "." + fileExtension;
-            String fileFullName = String.format("%s_%s.%s", fileNameParts[0], fileId, fileExtension); // ex) filename_uuid.png
+            String fileFullName = String.format("%s_%s.%s", fileNameWithoutExtension, fileId, fileExtension); // ex) filename_uuid.png
 
             // 파일 저장
             Path filePath = path.resolve(fileFullName);
