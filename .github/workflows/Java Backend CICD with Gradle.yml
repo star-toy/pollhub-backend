@@ -10,6 +10,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: 1234
+          MYSQL_DATABASE: polling
+          MYSQL_USER: polling
+          MYSQL_PASSWORD: polling
+        ports:
+          - 3306:3306
+        options: "--health-cmd=\"mysqladmin ping --silent\" --health-interval=10s --health-timeout=5s --health-retries=5"
+
     steps:
       - name: 리포지토리 체크아웃
         uses: actions/checkout@v2
@@ -25,6 +37,13 @@ jobs:
 
       - name: Gradle 빌드
         run: ./gradlew build
+
+      - name: MySQL 서비스 대기
+        run: |
+          until mysqladmin ping -h"mysql" --silent; do
+            echo "Waiting for database connection..."
+            sleep 5
+          done
 
       - name: 테스트 실행 (테스트 DB 사용)
         env:
