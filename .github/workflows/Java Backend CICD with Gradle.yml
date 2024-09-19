@@ -29,7 +29,7 @@ jobs:
       - name: 테스트 실행 (테스트 DB 사용)
         env:
           SPRING_PROFILES_ACTIVE: test
-          SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/polling?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+          SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/polling?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
           SPRING_DATASOURCE_USERNAME: polling
           SPRING_DATASOURCE_PASSWORD: polling
         run: ./gradlew test
