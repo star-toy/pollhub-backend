@@ -7,6 +7,7 @@ on:
     branches: ['main']
 
 jobs:
+  # 빌드 및 테스트 Job
   build:
     runs-on: ubuntu-latest
 
@@ -38,7 +39,6 @@ jobs:
       - name: Gradle 빌드
         run: ./gradlew build --scan # --scan 옵션 추가
 
-
       - name: 테스트 실행 (테스트 DB 사용)
         env:
            SPRING_PROFILES_ACTIVE: test
@@ -47,9 +47,18 @@ jobs:
            SPRING_DATASOURCE_PASSWORD: polling
         run: ./gradlew test --scan # --scan 옵션 추가
 
-
       - name: 빌드 결과 확인
         run: ls -la build/libs/
+
+  # 배포 Job
+  deploy:
+    needs: build # build job이 성공해야 deploy가 실행됨
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # main 브랜치에만 배포
+
+    steps:
+      - name: 리포지토리 체크아웃
+        uses: actions/checkout@v2
 
       - name: AWS 인증하기
         uses: aws-actions/configure-aws-credentials@v1
@@ -66,13 +75,6 @@ jobs:
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           source: 'build/libs/*.jar'
           target: '/home/ubuntu/polling-backend/'
-
-      - name: 운영 DB 연결 정보 설정 (환경변수로 설정)
-        if: github.ref == 'refs/heads/main'
-        run: |
-          echo "SPRING_DATASOURCE_URL=${{ secrets.PROD_SPRING_DATASOURCE_URL }}" >> $GITHUB_ENV
-          echo "SPRING_DATASOURCE_USERNAME=${{ secrets.PROD_SPRING_DATASOURCE_USERNAME }}" >> $GITHUB_ENV
-          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.PROD_SPRING_DATASOURCE_PASSWORD }}" >> $GITHUB_ENV
 
       - name: 서버에서 애플리케이션 실행
         uses: appleboy/ssh-action@master
