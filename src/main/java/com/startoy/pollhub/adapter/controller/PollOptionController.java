@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Log4j2
-@RequestMapping("/api/v1/options")
+@RequestMapping("/v1/options")
 @Tag(name = "투표 선택지 Option", description = "투표 옵션 관리 API")
 public class PollOptionController {
 

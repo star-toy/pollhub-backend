@@ -18,7 +18,7 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/webjars/**",
-            "/api/**",
+            "/v*/**", // v1, v2, v3 ...
             "/error"};
 
     @Bean

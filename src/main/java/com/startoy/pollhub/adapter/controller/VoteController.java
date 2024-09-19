@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/vote")
+@RequestMapping("/v1/vote")
 @Tag(name = "투표 행위 Vote", description = "투표 행위 관리 API")
 public class VoteController {
 

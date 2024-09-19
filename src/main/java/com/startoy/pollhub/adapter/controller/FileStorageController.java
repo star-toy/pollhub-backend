@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/files")
+@RequestMapping("/v1/files")
 @Tag(name = "파일 업로드", description = "파일 업로드 API")
 public class FileStorageController {
 
