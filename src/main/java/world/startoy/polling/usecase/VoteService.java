@@ -5,6 +5,8 @@ import world.startoy.polling.domain.Vote;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 public class VoteService {
@@ -18,7 +20,10 @@ public class VoteService {
             throw new IllegalStateException("이미 투표하셨습니다.");
         }
 
+        String voteUid = UUID.randomUUID().toString();
+
         Vote vote = new Vote();
+        vote.setVoteUid(voteUid);
         vote.setPollId(pollId);
         vote.setOptionId(optionId);
         vote.setVoterIp(voterIp);

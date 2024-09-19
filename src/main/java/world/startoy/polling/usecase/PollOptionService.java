@@ -83,8 +83,7 @@ public class PollOptionService {
         // PostService.java 의 게시글 수정 부분과 비교시 장단점이 분명해서 코드 통일 여부 고민중
         return pollOptionRepository.findById(optionId).map(existingOption -> {
 
-            existingOption.setOptionText(option.getOptionText());
-            existingOption.setVotedCount(option.getVotedCount());
+            existingOption.setPollOptionText(option.getPollOptionText());
             existingOption.setFileId(option.getFileId());
             existingOption.setIsDeleted(option.getIsDeleted());
             existingOption.setUpdatedAt(LocalDateTime.now());

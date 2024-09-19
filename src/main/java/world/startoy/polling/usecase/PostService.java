@@ -70,7 +70,7 @@ public class PostService {
 
         }
 
-            // Poll과 PollOption 간의 참조 설정
+        // Poll과 PollOption 간의 참조 설정
         for (Poll poll : savedPost.getPolls()) {
             Poll savedPoll;
 

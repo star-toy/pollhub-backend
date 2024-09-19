@@ -12,13 +12,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "pl_option")
-public class PollOption  {
+@Table(name = "pl_poll_option")
+public class PollOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "option_id", nullable = false, updatable = false)
+    @Column(name = "poll_option_id", nullable = false)
     private Long id;
+
+    @Column(name = "poll_option_uid", unique = true, nullable = false, length = 36)
+    private String pollOptionUid;
 
     @ManyToOne(fetch = FetchType.LAZY) // FetchType.LAZY : 관련 엔티티를 실제로 사용할 때까지 로딩을 지연시켜 성능을 최적화
     @JoinColumn(name = "poll_id")
@@ -26,24 +29,22 @@ public class PollOption  {
     @JsonBackReference // JsonIgnore 어노테이션 적용 시 polloption post api 에서 poll_id 를 참조하지 못하는 오류 발생.
     private Poll poll;
 
-    @Column(name = "voted_count")
-    private Integer votedCount;
+    @Column(name = "poll_option_seq", nullable = false)
+    private Integer pollOptionSeq;
 
-    //@NotEmpty(message = "옵션 설명은 비어 있을 수 없습니다.")
-    @Column(name = "option_text", length = 255)
-    private String optionText;
+    @Column(name = "poll_option_text", length = 255)
+    private String pollOptionText;
 
-    @Column(name = "file_id", columnDefinition = "CHAR(36)")
+    @Column(name = "file_id", length = 36)
     private String fileId;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    @Column(name = "created_by", length = 20, nullable = false)
+    @Column(name = "created_by", nullable = false, length = 20)
     private String createdBy;
 
     @Column(name = "updated_at")

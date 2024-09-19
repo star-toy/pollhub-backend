@@ -1,12 +1,7 @@
 package world.startoy.polling.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,23 +15,25 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id", nullable = false, updatable = false)
+    @Column(name = "post_id", nullable = false)
     private Long id;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "post_uid", unique = true, nullable = false, length = 36)
+    private String postUid;
+
+    @Column(name = "title", nullable = false, length = 200)
     private String title;
 
-    @Column(name = "file_id", columnDefinition = "CHAR(36)")
+    @Column(name = "file_id", length = 36)
     private String fileId;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "created_by", length = 20, nullable = false)
+    @Column(name = "created_by", nullable = false, length = 20)
     private String createdBy;
 
     @Column(name = "updated_at")
@@ -45,7 +42,6 @@ public class Post {
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Poll> polls;
-
 }

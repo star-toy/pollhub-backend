@@ -1,15 +1,7 @@
 package world.startoy.polling.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,32 +13,35 @@ import java.time.LocalDateTime;
 public class FileStorage {
 
     @Id
-    @Column(name = "file_id", nullable = false, updatable = false, columnDefinition = "CHAR(36)")
-    private String fileId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "file_id", nullable = false)
+    private Long id;
 
-    @Column(name = "file_name", length = 255, nullable = false)
+    @Column(name = "file_uid", unique = true, nullable = false, length = 36)
+    private String fileUid;
+
+    @Column(name = "file_name", nullable = false, length = 255)
     private String fileName;
 
-    @Column(name = "file_full_name", length = 255, nullable = false)
+    @Column(name = "file_full_name", nullable = false, length = 255)
     private String fileFullName;
 
-    @Column(name = "file_path", length = 1000, nullable = false)
+    @Column(name = "file_path", nullable = false, length = 1000)
     private String filePath;
 
-    @Column(name = "file_full_path", length = 1000, nullable = false)
+    @Column(name = "file_full_path", nullable = false, length = 1000)
     private String fileFullPath;
 
-    @Column(name = "file_extension", length = 10, nullable = false)
+    @Column(name = "file_extension", nullable = false, length = 10)
     private String fileExtension;
 
     @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "created_by", length = 20, nullable = false)
+    @Column(name = "created_by", nullable = false, length = 20)
     private String createdBy;
 
     @Column(name = "updated_at")
@@ -54,5 +49,4 @@ public class FileStorage {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
-
 }

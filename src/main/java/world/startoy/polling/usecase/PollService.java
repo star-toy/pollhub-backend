@@ -102,7 +102,7 @@ public class PollService {
                     existingOptions.stream()
                             .filter(option -> option.getId().equals(newOption.getId()))
                             .forEach(option -> {
-                                option.setOptionText(newOption.getOptionText());
+                                option.setPollOptionText(newOption.getPollOptionText());
                                 // 필요에 따라 추가 필드 업데이트
                             });
                 } else {
