@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Service
@@ -18,19 +20,24 @@ import java.util.UUID;
 public class FileStorageService {
 
     private final FileStorageRepository fileStorageRepository;
-    private final String uploadDir = "/path/to/upload/directory";
+    private final String baseUploadDir = "/uploads/";
 
 
+    // 파일 저장
     public FileStorage saveFile(MultipartFile file, String uploaderIp) throws IOException {
 
+        // 파일 유효성 확인
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File must not be null or empty");
         }
 
         try {
 
-            // 폴더 존재 여부 확인
-            Path path = Path.of(uploadDir);
+            // 실제 파일 업로드 경로 가져오기
+            String uploadDirFullPath = getUploadDirFullPath();
+
+            // 폴더 존재 여부 확인 및 생성
+            Path path = Path.of(uploadDirFullPath);
             if (!Files.exists(path)) {
                 Files.createDirectories(path); // 폴더 생성 실패 시 IOException 발생 가능
             }
@@ -38,7 +45,7 @@ public class FileStorageService {
             String fileId = UUID.randomUUID().toString();
             String fileName = file.getOriginalFilename(); // File Extension 포함 // ex) filename.png
 
-            // 파일 유효성 확인
+            // 파일명 유효성 확인
             if (fileName == null || !fileName.contains(".")) {
                 throw new FileValidationException("Invalid file name: The file name is either null or missing a file extension.");
             }
@@ -99,4 +106,10 @@ public class FileStorageService {
         }
     }
 
+    // 실제 파일 업로드 경로 반환  // ex) baseUploadDir/yyyy/MM/dd/fileName.png
+    public String getUploadDirFullPath() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        String formatedNow = LocalDate.now().format(formatter);
+        return String.format("%s/%s",baseUploadDir, formatedNow); // ex) uploads/2024/9/19/example.png
+    }
 }
