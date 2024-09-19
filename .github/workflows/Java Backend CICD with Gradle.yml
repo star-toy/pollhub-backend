@@ -75,6 +75,9 @@ jobs:
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           source: 'build/libs/polling-0.0.1-SNAPSHOT.jar' # build/libs/*.jar 진행 시 오류 발생하여 명확한 파일명 명시
           target: '/home/ubuntu/polling-backend/'
+          overwrite: true # 파일 덮어쓰기 허용
+          debug: true # 디버그 모드 활성화
+          timeout: 60s # 타임아웃 시간 증가
 
       - name: 서버에서 애플리케이션 실행
         uses: appleboy/ssh-action@master
