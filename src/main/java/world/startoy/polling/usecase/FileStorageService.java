@@ -44,7 +44,7 @@ public class FileStorageService {
                 System.out.println("Upload Directory: " + uploadDirFullPath);
             }
 
-            String fileId = UUID.randomUUID().toString();
+            String fileUid = UUID.randomUUID().toString();
             String fileName = file.getOriginalFilename(); // File Extension 포함 // ex) filename.png
 
             // 파일명 유효성 확인
@@ -62,7 +62,7 @@ public class FileStorageService {
             String fileExtension = fileNameParts[1];
 
             // 중복 파일명 방지
-            String fileFullName = String.format("%s_%s.%s", fileNameWithoutExtension, fileId, fileExtension); // ex) filename_uuid.png
+            String fileFullName = String.format("%s_%s.%s", fileNameWithoutExtension, fileUid, fileExtension); // ex) filename_uuid.png
 
             // 파일 저장
             Path filePath = path.resolve(fileFullName);
@@ -70,7 +70,7 @@ public class FileStorageService {
 
             // FileStorage 객체 생성
             FileStorage fileStorage = FileStorage.builder()
-                    .fileId(fileId)
+                    .fileUid(fileUid)
                     .fileName(fileName)
                     .fileFullName(fileFullName)
                     .filePath(filePath.toString())
