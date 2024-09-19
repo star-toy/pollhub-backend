@@ -12,7 +12,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8
+        image: mysql:latest
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: polling
@@ -79,6 +79,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
+            export SPRING_DATASOURCE_URL="${{ secrets.PROD_SPRING_DATASOURCE_URL }}"
+            export SPRING_DATASOURCE_USERNAME="${{ secrets.PROD_SPRING_DATASOURCE_USERNAME }}"
+            export SPRING_DATASOURCE_PASSWORD="${{ secrets.PROD_SPRING_DATASOURCE_PASSWORD }}"
             screen -dmS app java -jar /home/ubuntu/polling-backend/build/libs/polling-0.0.1-SNAPSHOT.jar
           debug: true
           timeout: 1500s
