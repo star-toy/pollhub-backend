@@ -73,7 +73,7 @@ jobs:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-          source: 'build/libs/*.jar'
+          source: 'build/libs/polling-0.0.1-SNAPSHOT.jar' # build/libs/*.jar 진행 시 오류 발생하여 명확한 파일명 명시
           target: '/home/ubuntu/polling-backend/'
 
       - name: 서버에서 애플리케이션 실행
