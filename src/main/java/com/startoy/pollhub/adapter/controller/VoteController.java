@@ -1,5 +1,6 @@
 package com.startoy.pollhub.adapter.controller;
 
+import com.startoy.pollhub.usecase.UserService;
 import com.startoy.pollhub.usecase.VoteService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class VoteController {
 
     private final VoteService voteService;
+    private final UserService userService;
 
 
     @PostMapping
     public ResponseEntity<String> submitVote(@RequestParam Long pollId, @RequestParam Long optionId, HttpServletRequest request) {
-        String voterIp = getClientIp(request);
+        String voterIp = userService.getClientIp(request);
 
         try {
             voteService.submitVote(pollId, optionId, voterIp);
@@ -29,11 +31,6 @@ public class VoteController {
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
-
-
-    private String getClientIp(HttpServletRequest request) {
-        return voteService.getClientIp(request);  // 서비스에서 IP 주소를 가져오는 메소드 호출
     }
 
 }
