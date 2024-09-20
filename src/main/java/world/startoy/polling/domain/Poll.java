@@ -17,10 +17,12 @@ import java.util.List;
 public class Poll {
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "poll_id", nullable = false)
     private Long id;
 
+    @NotNull
     @Column(name = "poll_uid", unique = true, nullable = false, length = 36)
     private String pollUid;
 
@@ -34,21 +36,25 @@ public class Poll {
     @Column(name = "poll_seq", nullable = false )
     private Integer pollSeq;
 
+    @NotNull
     @Column(name = "poll_category", nullable = false, length = 255)
     private String pollCategory;
 
+    @NotNull
     @Column(name = "poll_description", nullable = false, length = 255)
     private String pollDescription;
 
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 
+    @NotNull
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @NotNull
     @Column(name = "created_by", nullable = false, length = 20)
     private String createdBy;
 

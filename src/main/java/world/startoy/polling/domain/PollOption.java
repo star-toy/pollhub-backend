@@ -2,6 +2,7 @@ package world.startoy.polling.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -16,10 +17,12 @@ import java.time.LocalDateTime;
 public class PollOption {
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "poll_option_id", nullable = false)
     private Long id;
 
+    @NotNull
     @Column(name = "poll_option_uid", unique = true, nullable = false, length = 36)
     private String pollOptionUid;
 
@@ -29,6 +32,7 @@ public class PollOption {
     @JsonBackReference // JsonIgnore 어노테이션 적용 시 polloption post api 에서 poll_id 를 참조하지 못하는 오류 발생.
     private Poll poll;
 
+    @NotNull
     @Column(name = "poll_option_seq", nullable = false)
     private Integer pollOptionSeq;
 
@@ -38,12 +42,14 @@ public class PollOption {
     @Column(name = "file_id", length = 36)
     private String fileId;
 
+    @NotNull
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @NotNull
     @Column(name = "created_by", nullable = false, length = 20)
     private String createdBy;
 
