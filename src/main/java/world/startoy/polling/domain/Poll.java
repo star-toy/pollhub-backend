@@ -40,6 +40,7 @@ public class Poll {
     @Column(name = "poll_category", nullable = false, length = 255)
     private String pollCategory;
 
+
     @NotNull
     @Column(name = "poll_description", nullable = false, length = 255)
     private String pollDescription;
