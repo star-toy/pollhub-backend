@@ -61,6 +61,11 @@ jobs:
     runs-on: ubuntu-latest
     #if: github.ref == 'refs/heads/main' # main 브랜치에만 배포
 
+    defaults:
+      run:
+        working-directory: polling-backend # deploy 작업의 기본 디렉토리 설정
+
+        
     steps:
       - name: 리포지토리 체크아웃
         uses: actions/checkout@v2
@@ -103,11 +108,13 @@ jobs:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-          source: '$(pwd)/build/libs/polling-0.0.1-SNAPSHOT.jar' # 절대경로
+          source: 'build/libs/polling-0.0.1-SNAPSHOT.jar' # working-directory를 기준으로 경로 설정
           target: '/home/ubuntu/polling-backend'
           overwrite: true # 파일 덮어쓰기 허용
           debug: true # 디버그 모드 활성화
           timeout: 150s # 타임아웃 시간 증가
+        working-directory: polling-backend # JAR 파일이 있는 디렉토리로 설정
+
 
       - name: 서버에서 애플리케이션 실행
         uses: appleboy/ssh-action@master
