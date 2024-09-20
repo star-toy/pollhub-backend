@@ -19,7 +19,13 @@ java {
     }
 }
 
-// 테스트
+jar {
+    // layout.buildDirectory를 사용하여 build 디렉토리의 libs 폴더를 설정
+    destinationDirectory = layout.buildDirectory.dir("libs")
+    archiveBaseName = 'polling'
+    archiveVersion = '0.0.1-SNAPSHOT'
+}
+
 
 repositories {
     mavenCentral()

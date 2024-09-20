@@ -19,9 +19,9 @@ import java.util.UUID;
 public class FileStorageService {
 
     private final FileStorageRepository fileStorageRepository;
-    private final String baseUploadDir = "/home/user/uploads";
+   // private final String baseUploadDir = "/home/user/uploads";
 
-//    private final String baseUploadDir = "/uploads/";
+    private final String baseUploadDir = "/uploads/";
 
 
     // 파일 저장
