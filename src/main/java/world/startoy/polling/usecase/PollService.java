@@ -85,8 +85,8 @@ public class PollService {
         if (existingPoll.isPresent()) {
             Poll toUpdate = existingPoll.get();
 
-            if (poll.getTitle() != null && !poll.getTitle().equals(toUpdate.getTitle())) {
-                toUpdate.setTitle(poll.getTitle());
+            if (poll.getPollDescription() != null && !poll.getPollDescription().equals(toUpdate.getPollDescription())) {
+                toUpdate.setPollDescription(poll.getPollDescription());
             }
 
             List<PollOption> existingOptions = toUpdate.getOptions();

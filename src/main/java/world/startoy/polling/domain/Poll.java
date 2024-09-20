@@ -35,8 +35,8 @@ public class Poll {
     @Column(name = "poll_category", nullable = false, length = 255)
     private String pollCategory;
 
-    @Column(name = "title", nullable = false, length = 255)
-    private String title;
+    @Column(name = "poll_description", nullable = false, length = 255)
+    private String pollDescription;
 
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
