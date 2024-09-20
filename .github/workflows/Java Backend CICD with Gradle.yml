@@ -114,6 +114,8 @@ jobs:
 
       #     debug: true
 ########################################################
+
+      
       - name: JAR 파일 전송
         uses: appleboy/scp-action@v0.1.3 # master -> 버전 명시
         with:
@@ -134,10 +136,15 @@ jobs:
           username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: |
+            echo "환경 변수 설정 시작"
             export SPRING_DATASOURCE_URL="${{ secrets.PROD_SPRING_DATASOURCE_URL }}" &&
             export SPRING_DATASOURCE_USERNAME="${{ secrets.PROD_SPRING_DATASOURCE_USERNAME }}" &&
             export SPRING_DATASOURCE_PASSWORD="${{ secrets.PROD_SPRING_DATASOURCE_PASSWORD }}" &&
-            screen -dmS app java -jar /home/ubuntu/polling-backend/build/libs/polling-0.0.1-SNAPSHOT.jar
+            echo "환경 변수 설정 완료"
+            echo "SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL"
+            echo "SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME"
+            echo "SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD"
+            sudo nohup java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar > /home/ubuntu/polling-backend/github/workspace/build/libs/app.log 2>&1 &
           debug: true
           timeout: 1500s
           command_timeout: 1500s
