@@ -52,7 +52,7 @@ jobs:
            SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/polling?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
            SPRING_DATASOURCE_USERNAME: polling
            SPRING_DATASOURCE_PASSWORD: polling
-        run: chmod +x ./gradlew test --scan # --scan 옵션 추가
+        run: ./gradlew test --scan # --scan 옵션 추가
 
 
   # 배포 Job
