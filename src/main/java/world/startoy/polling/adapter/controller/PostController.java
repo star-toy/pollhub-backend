@@ -67,39 +67,39 @@ public class PostController {
         // return "redirect:/board/register"; 게시글 등록 후 redirect 될 화면 명시 예정
     }
 
-
-    // 특정 ID의 게시글을 수정
-    @PutMapping("/{postId}")
-    @Operation(summary = "특정 게시글 수정")
-    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @Valid @RequestBody Post post) {
-        try {
-
-            Post updatedPost = postService.updatePost(postId, post);
-            return ResponseEntity.ok(updatedPost);
-
-        } catch (RuntimeException e) {
-            log.error("게시물 수정 중 오류 발생: {}",e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
-
-    }
-
-
-    // 특정 ID의 게시글을 삭제
-    @DeleteMapping("/{postId}")
-    @Operation(summary = "게시글 삭제")
-    ResponseEntity<String> deletePost(@PathVariable Long postId) {
-        try {
-            postService.deletePost(postId);
-            return ResponseEntity.ok().build();  // 삭제 성공 시 200 OK 반환
-
-        } catch (EntityNotFoundException e) {
-
-            return ResponseEntity.notFound().build();  // 게시글이 없는 경우 404 Not Found 반환
-        } catch (Exception e) {
-
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    1차 개발 범위 외 api 숨김 처리
+//    // 특정 ID의 게시글을 수정
+//    @PutMapping("/{postId}")
+//    @Operation(summary = "특정 게시글 수정")
+//    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @Valid @RequestBody Post post) {
+//        try {
+//
+//            Post updatedPost = postService.updatePost(postId, post);
+//            return ResponseEntity.ok(updatedPost);
+//
+//        } catch (RuntimeException e) {
+//            log.error("게시물 수정 중 오류 발생: {}",e.getMessage());
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//    }
+//
+//
+//    // 특정 ID의 게시글을 삭제
+//    @DeleteMapping("/{postId}")
+//    @Operation(summary = "게시글 삭제")
+//    ResponseEntity<String> deletePost(@PathVariable Long postId) {
+//        try {
+//            postService.deletePost(postId);
+//            return ResponseEntity.ok().build();  // 삭제 성공 시 200 OK 반환
+//
+//        } catch (EntityNotFoundException e) {
+//
+//            return ResponseEntity.notFound().build();  // 게시글이 없는 경우 404 Not Found 반환
+//        } catch (Exception e) {
+//
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
 }

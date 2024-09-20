@@ -52,40 +52,41 @@ public class PollController {
     }
 
 
-    // 특정 ID의 투표 수정
-    @PutMapping("/{pollId}")
-    @Operation(summary = "투표 수정")
-    public ResponseEntity<Poll> updatePoll(@PathVariable Long pollId, @RequestBody Poll poll) {
-        try {
-            Poll updatedPoll = pollService.updatePoll(pollId, poll);
-            return ResponseEntity.ok(updatedPoll);
-
-        } catch (EntityNotFoundException e) {
-
-            log.error("투표 수정 중 오류 발생: 해당 ID의 투표를 찾을 수 없음. {}",e.getMessage());
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            log.error("투표 수정 중 오류가 발생: {}", e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-
-    // 특정 ID의 투표 삭제
-    @DeleteMapping("/{pollId}")
-    @Operation(summary = "투표 삭제")
-    public ResponseEntity<String> deletePoll(@PathVariable Long pollId) {
-        try {
-            pollService.deletePoll(pollId);
-            return ResponseEntity.ok("투표 삭제 완료.");
-
-        } catch (EntityNotFoundException e) {
-            log.error("투표 삭제 중 오류 발생: 해당 ID의 투표를 찾을 수 없음. {}", e.getMessage());
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            log.error("투표 삭제 중 오류가 발생: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("투표 삭제 중 오류가 발생."); // 500
-        }
-    }
+//    1차 개발 범위 외 api 숨김 처리
+//    // 특정 ID의 투표 수정
+//    @PutMapping("/{pollId}")
+//    @Operation(summary = "투표 수정")
+//    public ResponseEntity<Poll> updatePoll(@PathVariable Long pollId, @RequestBody Poll poll) {
+//        try {
+//            Poll updatedPoll = pollService.updatePoll(pollId, poll);
+//            return ResponseEntity.ok(updatedPoll);
+//
+//        } catch (EntityNotFoundException e) {
+//
+//            log.error("투표 수정 중 오류 발생: 해당 ID의 투표를 찾을 수 없음. {}",e.getMessage());
+//            return ResponseEntity.notFound().build();
+//        } catch (Exception e) {
+//            log.error("투표 수정 중 오류가 발생: {}", e.getMessage());
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+//
+//
+//    // 특정 ID의 투표 삭제
+//    @DeleteMapping("/{pollId}")
+//    @Operation(summary = "투표 삭제")
+//    public ResponseEntity<String> deletePoll(@PathVariable Long pollId) {
+//        try {
+//            pollService.deletePoll(pollId);
+//            return ResponseEntity.ok("투표 삭제 완료.");
+//
+//        } catch (EntityNotFoundException e) {
+//            log.error("투표 삭제 중 오류 발생: 해당 ID의 투표를 찾을 수 없음. {}", e.getMessage());
+//            return ResponseEntity.notFound().build();
+//        } catch (Exception e) {
+//            log.error("투표 삭제 중 오류가 발생: {}", e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("투표 삭제 중 오류가 발생."); // 500
+//        }
+//    }
 
 }
