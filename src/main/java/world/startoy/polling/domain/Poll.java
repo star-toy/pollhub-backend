@@ -30,7 +30,7 @@ public class Poll {
     private Post post;
 
     @Column(name = "poll_seq", nullable = false)
-    private Integer pollSeq;
+    private int pollSeq;
 
     @Column(name = "poll_category", nullable = false, length = 255)
     private String pollCategory;
