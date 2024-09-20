@@ -74,17 +74,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: 현재 작업 디렉토리 확인
-        run: pwd
+        run: pwd # 현재 작업 디렉토리 확인 ( /home/runner/work/polling-backend/polling-backend )
 
       - name: Gradle 빌드 (deploy job에서)
         run: ./gradlew clean build --scan
-        working-directory: polling-backend # 빌드할 디렉토리 설정
+        #working-directory: ./polling-backend # 빌드할 디렉토리 설정
 
       - name: 빌드 디렉토리 확인
-        run: ls -la build/
+        run: ls -la /home/runner/work/polling-backend/polling-backend/build/ # 절대 경로 사용
 
       - name: 빌드 결과 확인
-        run: ls -la build/libs/
+        run: ls -la /home/runner/work/polling-backend/polling-backend/build/libs/ # 절대 경로 사용
          
 ########################################################
           
@@ -111,7 +111,7 @@ jobs:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-          source: 'build/libs/*.jar'
+          source: '/home/runner/work/polling-backend/polling-backend/build/libs/polling-0.0.1-SNAPSHOT.jar' # 절대 경로 사용
           target: '/home/ubuntu/polling-backend'
           overwrite: true # 파일 덮어쓰기 허용
           debug: true # 디버그 모드 활성화
