@@ -45,13 +45,14 @@ jobs:
       - name: 빌드 결과 확인
         run: ls -la build/libs/
 
-      - name: 테스트 실행 (테스트 DB 사용)
+      # 테스트 실행 (MySQL 서비스에 연결)
+      - name: 테스트 실행
         env:
            SPRING_PROFILES_ACTIVE: test
            SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/polling?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
            SPRING_DATASOURCE_USERNAME: polling
            SPRING_DATASOURCE_PASSWORD: polling
-        run: ./gradlew test --scan # --scan 옵션 추가
+        run: chmod +x ./gradlew test --scan # --scan 옵션 추가
 
 
   # 배포 Job
@@ -115,9 +116,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           script: 
-          #  export SPRING_DATASOURCE_URL="${{ secrets.PROD_SPRING_DATASOURCE_URL }}"
-          #  export SPRING_DATASOURCE_USERNAME="${{ secrets.PROD_SPRING_DATASOURCE_USERNAME }}"
-          #  export SPRING_DATASOURCE_PASSWORD="${{ secrets.PROD_SPRING_DATASOURCE_PASSWORD }}"
+            export SPRING_DATASOURCE_URL="${{ secrets.PROD_SPRING_DATASOURCE_URL }}"
+            export SPRING_DATASOURCE_USERNAME="${{ secrets.PROD_SPRING_DATASOURCE_USERNAME }}"
+            export SPRING_DATASOURCE_PASSWORD="${{ secrets.PROD_SPRING_DATASOURCE_PASSWORD }}"
            screen -dmS app java -jar /home/ubuntu/polling-backend/build/libs/polling-0.0.1-SNAPSHOT.jar
           debug: true
           timeout: 1500s
