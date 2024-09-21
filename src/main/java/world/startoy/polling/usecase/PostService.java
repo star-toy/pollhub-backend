@@ -1,19 +1,20 @@
 package world.startoy.polling.usecase;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.PollRepository;
 import world.startoy.polling.adapter.repository.PostRepository;
 import world.startoy.polling.domain.Poll;
 import world.startoy.polling.domain.PollOption;
 import world.startoy.polling.domain.Post;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,6 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final PollService pollService;
     private final PollRepository pollRepository;
     private final PollOptionRepository pollOptionRepository;
 
@@ -33,20 +33,51 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    // 게시글 상세 가져오기
+    public PostDetailResponse getPostDetailByPostUid(String postUid) {
 
-    public Optional<Post> findPostById(Long postId) {
-        // 게시글 정보 조회
-        Post post = postRepository.findById(postId).orElse(null);
+        // 게시글 조회
+        Optional<Post> optionalPost = postRepository.findByPostUid(postUid);
 
-        if (post == null) {
-            return null;
+        Post post;
+        if (optionalPost.isPresent()) {
+            post = optionalPost.get();
+        } else {
+            throw new EntityNotFoundException("Post not found with UID: " + postUid);
         }
 
-        // 해당 게시글에 연결된 모든 투표를 조회하고, 각 투표의 선택지도 함께 조회
-        List<Poll> polls = pollService.getPollsByPostId(postId);
-        post.setPolls(polls);
+        // 해당 게시글에 연결된 Poll 리스트 조회
 
-        return Optional.of(post);
+        List<Poll> pollList = pollRepository.findByPostId(post.getId());
+        List<PollDTO> polls = new ArrayList<>();
+
+        for (Poll poll : pollList) {
+            // 각 Poll에 연결된 PollOption 리스트 조회
+            List<PollOptionDTO> options = new ArrayList<>();
+            List<PollOption> pollOptions = pollOptionRepository.findByPollId(poll.getId());
+
+            for (PollOption option : pollOptions) {
+                PollOptionDTO pollOptionDTO = new PollOptionDTO(
+                        option.getPollOptionUid(),
+                        option.getPollOptionSeq(),
+                        option.getPollOptionText()
+                );
+                options.add(pollOptionDTO);
+            }
+
+            PollDTO pollDTO = new PollDTO(
+                    poll.getPollUid(),
+                    poll.getPollSeq(),
+                    poll.getPollCategory(),
+                    poll.getPollDescription(),
+                    options
+            );
+
+            polls.add(pollDTO);
+        }
+
+        // 최종적으로 PostDetailResponse 반환
+        return new PostDetailResponse(post.getPostUid(), post.getTitle(), polls);
     }
 
     // 새로운 게시글을 생성

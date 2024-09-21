@@ -1,15 +1,16 @@
 package world.startoy.polling.adapter.controller;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import world.startoy.polling.domain.Post;
 import world.startoy.polling.usecase.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import world.startoy.polling.usecase.PostDetailResponse;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,18 +43,14 @@ public class PostController {
 
 
     //  특정 ID의 게시글을 조회
-    @GetMapping("/{postId}")
+    @GetMapping("/{postUid}")
     @Operation(summary = "게시글 상세 조회")
-    public ResponseEntity<Optional<Post>> getPostById(@PathVariable Long postId) { // 경로 매개변수를 통해 postId 수신
-        Optional<Post> post = postService.findPostById(postId); // PostService를 통해 게시글과 관련된 모든 데이터 조회
+    public ResponseEntity<PostDetailResponse> getPostByUid(@PathVariable String postUid) { // 경로 매개변수를 통해 postUid 수신
 
-        if (post.isEmpty()) { // 게시글이 존재하지 않을 경우 404 Not Found 응답
-            return ResponseEntity.notFound().build();
-        }
+        PostDetailResponse response = postService.getPostDetailByPostUid(postUid); // PostService를 통해 게시글과 관련된 모든 데이터 조회
 
-        return ResponseEntity.ok(post); // 게시글이 존재할 경우 200 OK와 함께 게시글 데이터 응답
+        return ResponseEntity.ok(response); // 게시글이 존재할 경우 200 OK와 함께 게시글 데이터 응답
     }
-
 
     // 게시글 등록
     @PostMapping
