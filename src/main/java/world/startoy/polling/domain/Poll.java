@@ -3,6 +3,7 @@ package world.startoy.polling.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,10 +17,12 @@ import java.util.List;
 public class Poll {
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "poll_id", nullable = false)
     private Long id;
 
+    @NotNull
     @Column(name = "poll_uid", unique = true, nullable = false, length = 36)
     private String pollUid;
 
@@ -29,24 +32,30 @@ public class Poll {
     @JsonBackReference // JsonIgnore 어노테이션 적용 시 polloption post api 에서 poll_id 를 참조하지 못하는 오류 발생.
     private Post post;
 
-    @Column(name = "poll_seq", nullable = false)
-    private int pollSeq;
+    @NotNull
+    @Column(name = "poll_seq", nullable = false )
+    private Integer pollSeq;
 
+    @NotNull
     @Column(name = "poll_category", nullable = false, length = 255)
     private String pollCategory;
 
+
+    @NotNull
     @Column(name = "poll_description", nullable = false, length = 255)
     private String pollDescription;
 
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 
+    @NotNull
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @NotNull
     @Column(name = "created_by", nullable = false, length = 20)
     private String createdBy;
 

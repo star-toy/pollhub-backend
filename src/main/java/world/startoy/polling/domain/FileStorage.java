@@ -13,13 +13,16 @@ import java.time.LocalDateTime;
 public class FileStorage {
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "file_id", nullable = false)
     private Long id;
 
+    @NotNull
     @Column(name = "file_uid", unique = true, nullable = false, length = 36)
     private String fileUid;
 
+    @NotNull
     @Column(name = "file_name", nullable = false, length = 255)
     private String fileName;
 
