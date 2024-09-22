@@ -12,11 +12,15 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import world.startoy.polling.usecase.dto.PollDTO;
+import world.startoy.polling.usecase.dto.PollOptionDTO;
 import world.startoy.polling.usecase.dto.PostDetailResponse;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -55,9 +59,52 @@ public class PostService {
     }
 
     public PostDetailResponse getPostDetail(Post post) {
-        // WIP
-        PostDetailResponse postDetailResponse = new PostDetailResponse();
-        return postDetailResponse;
+        return createPostDetailResponse(post);
+    }
+
+    private PostDetailResponse createPostDetailResponse(Post post) {
+        PostDetailResponse response = new PostDetailResponse();
+        response.setPostUid(post.getPostUid());
+        response.setTitle(post.getTitle());
+        response.setCreatedAt(post.getCreatedAt());
+        response.setCreatedBy(post.getCreatedBy());
+        response.setPolls(convertToPollDTOs(post.getPolls()));
+        return response;
+    }
+
+    private List<PollDTO> convertToPollDTOs(List<Poll> polls) {
+        List<PollDTO> pollDTOs = new ArrayList<>();
+
+        for (Poll poll : polls) {
+            pollDTOs.add(getPollDTO(poll));
+        }
+        return pollDTOs;
+    }
+
+    private PollDTO getPollDTO(Poll poll) {
+        List<PollOptionDTO> pollOptionDTOs = convertToPollOptionDTOs(poll.getOptions());
+
+        return new PollDTO(
+                poll.getPollUid(),
+                poll.getPollSeq(),
+                poll.getPollCategory(),
+                poll.getPollDescription(),
+                pollOptionDTOs);
+    }
+
+    private List<PollOptionDTO> convertToPollOptionDTOs(List<PollOption> options) {
+        List<PollOptionDTO> pollOptionDTOs = new ArrayList<>();
+        for (PollOption option : options) {
+            pollOptionDTOs.add(getPollOptionDTO(option));
+        }
+        return pollOptionDTOs;
+    }
+
+    private PollOptionDTO getPollOptionDTO(PollOption option) {
+        return new PollOptionDTO(
+                option.getPollOptionUid(),
+                option.getPollOptionSeq(),
+                option.getPollOptionText());
     }
 
     // 새로운 게시글을 생성
