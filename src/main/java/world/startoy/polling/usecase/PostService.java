@@ -57,6 +57,7 @@ public class PostService {
     public Optional<Post> findByPostUid(String postUid) {
         return postRepository.findByPostUid(postUid);
     }
+
     public PostDetailResponse getPostDetail(Post post) {
         return createPostDetailResponse(post);
     }
@@ -72,11 +73,9 @@ public class PostService {
     }
 
     private List<PollDTO> convertToPollDTOs(List<Poll> polls) {
-        List<PollDTO> pollDTOs = new ArrayList<>();
-        for (Poll poll : polls) {
-            pollDTOs.add(getPollDTO(poll));
-        }
-        return pollDTOs;
+        return polls.stream()
+                .map(this::getPollDTO) // 각 Poll을 PollDTO로 변환
+                .collect(Collectors.toList()); // 변환된 PollDTO 리스트로 수집
     }
 
     private PollDTO getPollDTO(Poll poll) {
@@ -92,11 +91,9 @@ public class PostService {
     }
 
     private List<PollOptionDTO> convertToPollOptionDTOs(List<PollOption> options) {
-        List<PollOptionDTO> pollOptionDTOs = new ArrayList<>();
-        for (PollOption option : options) {
-            pollOptionDTOs.add(getPollOptionDTO(option));
-        }
-        return pollOptionDTOs;
+        return options.stream()
+                .map(this::getPollOptionDTO) // 각 PollOption을 PollOptionDTO로 변환
+                .collect(Collectors.toList()); // 변환된 PollOptionDTO 리스트로 수집
     }
 
     private PollOptionDTO getPollOptionDTO(PollOption option) {
