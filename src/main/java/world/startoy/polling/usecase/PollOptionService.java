@@ -24,8 +24,8 @@ public class PollOptionService {
     private final PollRepository pollRepository;
 
 
+    // 특정 투표에 대한 모든 선택지 조회
     public List<PollOption> findOptionsByPollId(Long pollId) {
-        // 특정 투표에 대한 모든 선택지 조회
         return pollOptionRepository.findByPollId(pollId);
     }
 
@@ -75,42 +75,4 @@ public class PollOptionService {
         }
     }
 
-
-    // 특정 ID의 투표 옵션 수정
-    @Transactional
-    public PollOption updateOption(Long optionId, PollOption option) {
-
-        // PostService.java 의 게시글 수정 부분과 비교시 장단점이 분명해서 코드 통일 여부 고민중
-        return pollOptionRepository.findById(optionId).map(existingOption -> {
-
-            existingOption.setPollOptionText(option.getPollOptionText());
-            existingOption.setFileId(option.getFileId());
-            existingOption.setIsDeleted(option.getIsDeleted());
-            existingOption.setUpdatedAt(LocalDateTime.now());
-            existingOption.setUpdatedBy(option.getUpdatedBy());
-
-            return pollOptionRepository.save(existingOption);
-        }).orElseThrow(() -> new EntityNotFoundException("Poll option with ID " + optionId + " not found."));
-    }
-
-
-    // 특정 ID의 투표 옵션 삭제
-    public void deleteOption(Long optionId) {
-        try {
-            if (pollOptionRepository.existsById(optionId)) {
-                pollOptionRepository.deleteById(optionId);
-
-            } else {
-                log.error("투표 옵션 삭제 중 오류 발생: 해당 ID의 게시글을 찾을 수 없음.");
-                throw new EntityNotFoundException("Poll option with ID " + optionId + " not found.");
-            }
-        } catch (EntityNotFoundException e) {
-            log.error("투표 옵션 삭제 중 오류 발생: 해당 ID의 옵션을 찾을 수 없음. ID: {}", optionId);
-            throw e;
-
-        } catch (Exception e) {
-            log.error("투표 옵션 삭제 중 알 수 없는 오류 발생: {}", e.getMessage());
-            throw new RuntimeException("투표 옵션 삭제 중 오류가 발생.", e);
-        }
-    }
 }
