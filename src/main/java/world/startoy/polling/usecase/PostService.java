@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import world.startoy.polling.usecase.dto.PostDetailResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,6 +52,12 @@ public class PostService {
 
     public Optional<Post> findByPostUid(String postUid) {
         return postRepository.findByPostUid(postUid);
+    }
+
+    public PostDetailResponse getPostDetail(Post post) {
+        // WIP
+        PostDetailResponse postDetailResponse = new PostDetailResponse();
+        return postDetailResponse;
     }
 
     // 새로운 게시글을 생성

@@ -66,6 +66,8 @@ public class PostController {
             return ResponseEntity.notFound().build();
         }
 
+
+
         return ResponseEntity.ok(post); // 게시글이 존재할 경우 200 OK와 함께 게시글 데이터 응답
     }
 
