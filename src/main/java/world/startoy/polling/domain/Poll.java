@@ -34,7 +34,7 @@ public class Poll {
 
     @NotNull
     @Column(name = "poll_seq", nullable = false )
-    private Integer pollSeq;
+    private int pollSeq;
 
     @NotNull
     @Column(name = "poll_category", nullable = false, length = 255)
