@@ -41,18 +41,15 @@ public class PostService {
 
     public Optional<Post> findPostById(Long postId) {
         // 게시글 정보 조회
-        Post post = postRepository.findById(postId).orElse(null);
-
-        if (post == null) {
-            return null;
-        }
-
-        // 해당 게시글에 연결된 모든 투표를 조회하고, 각 투표의 선택지도 함께 조회
-        List<Poll> polls = pollService.getPollsByPostId(postId);
-        post.setPolls(polls);
-
-        return Optional.of(post);
+        return postRepository.findById(postId)
+                .map(post -> {
+                    // 해당 게시글에 연결된 모든 투표를 조회하고, 각 투표의 선택지도 함께 조회
+                    List<Poll> polls = pollService.getPollsByPostId(postId);
+                    post.setPolls(polls);
+                    return post;
+                });
     }
+
 
     public Optional<Post> findByPostUid(String postUid) {
         return postRepository.findByPostUid(postUid);
