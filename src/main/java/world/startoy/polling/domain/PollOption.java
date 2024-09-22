@@ -34,7 +34,7 @@ public class PollOption {
 
     @NotNull
     @Column(name = "poll_option_seq", nullable = false)
-    private Integer pollOptionSeq;
+    private int pollOptionSeq;
 
     @Column(name = "poll_option_text", length = 255)
     private String pollOptionText;
