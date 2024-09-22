@@ -20,11 +20,11 @@ public class PollOption {
     @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "poll_option_id", nullable = false)
-    private Long id;
+    private Long id; // 데이터베이스 식별자 (백엔드 내부에서 사용)
 
     @NotNull
     @Column(name = "poll_option_uid", unique = true, nullable = false, length = 36)
-    private String pollOptionUid;
+    private String pollOptionUid; // UUID 형태 (API 응답에서 사용)
 
     @ManyToOne(fetch = FetchType.LAZY) // FetchType.LAZY : 관련 엔티티를 실제로 사용할 때까지 로딩을 지연시켜 성능을 최적화
     @JoinColumn(name = "poll_id")

@@ -10,4 +10,6 @@ import java.util.List;
 public interface VoteRepository extends JpaRepository<Vote, Long> {
     // 특정 투표에 특정 ip 사용자 투표 정보 조회
     List<Vote> findByPollIdAndVoterIp(Long pollId, String voterIp);
+
+    List<Vote> findByPollId(Long pollId);
 }
