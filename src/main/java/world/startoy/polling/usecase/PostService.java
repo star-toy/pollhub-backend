@@ -12,10 +12,15 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import world.startoy.polling.usecase.dto.PollDTO;
+import world.startoy.polling.usecase.dto.PollOptionDTO;
+import world.startoy.polling.usecase.dto.PostDetailResponse;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -36,18 +41,66 @@ public class PostService {
 
     public Optional<Post> findPostById(Long postId) {
         // 게시글 정보 조회
-        Post post = postRepository.findById(postId).orElse(null);
-
-        if (post == null) {
-            return null;
-        }
-
-        // 해당 게시글에 연결된 모든 투표를 조회하고, 각 투표의 선택지도 함께 조회
-        List<Poll> polls = pollService.getPollsByPostId(postId);
-        post.setPolls(polls);
-
-        return Optional.of(post);
+        return postRepository.findById(postId)
+                .map(post -> {
+                    // 해당 게시글에 연결된 모든 투표를 조회하고, 각 투표의 선택지도 함께 조회
+                    List<Poll> polls = pollService.getPollsByPostId(postId);
+                    post.setPolls(polls);
+                    return post;
+                });
     }
+
+
+    public Optional<Post> findByPostUid(String postUid) {
+        return postRepository.findByPostUid(postUid);
+    }
+
+    public PostDetailResponse getPostDetail(Post post) {
+        return createPostDetailResponse(post);
+    }
+
+    private PostDetailResponse createPostDetailResponse(Post post) {
+        return PostDetailResponse.builder()
+                .postUid(post.getPostUid())
+                .title(post.getTitle())
+                .createdAt(post.getCreatedAt())
+                .createdBy(post.getCreatedBy())
+                .polls(convertToPollDTOs(post.getPolls()))
+                .build();
+    }
+
+    private List<PollDTO> convertToPollDTOs(List<Poll> polls) {
+        return polls.stream()
+                .map(this::getPollDTO) // 각 Poll을 PollDTO로 변환
+                .collect(Collectors.toList()); // 변환된 PollDTO 리스트로 수집
+    }
+
+    private PollDTO getPollDTO(Poll poll) {
+        List<PollOptionDTO> pollOptionDTOs = convertToPollOptionDTOs(poll.getOptions());
+
+        return PollDTO.builder()
+                .pollUid(poll.getPollUid())
+                .pollSeq(poll.getPollSeq())
+                .pollCategory(poll.getPollCategory())
+                .pollDescription(poll.getPollDescription())
+                .pollOptions(pollOptionDTOs)
+                .build();
+    }
+
+    private List<PollOptionDTO> convertToPollOptionDTOs(List<PollOption> options) {
+        return options.stream()
+                .map(this::getPollOptionDTO) // 각 PollOption을 PollOptionDTO로 변환
+                .collect(Collectors.toList()); // 변환된 PollOptionDTO 리스트로 수집
+    }
+
+    private PollOptionDTO getPollOptionDTO(PollOption option) {
+        return PollOptionDTO.builder()
+                .pollOptionUid(option.getPollOptionUid())
+                .pollOptionSeq(option.getPollOptionSeq())
+                .pollOptionText(option.getPollOptionText())
+                .build();
+    }
+
 
     // 새로운 게시글을 생성
     // 하나라도 실패할 경우 전체 작업을 롤백하기 위해 @Transational 사용
