@@ -55,6 +55,21 @@ public class PostController {
     }
 
 
+    //  특정 UID의 게시글을 조회
+    @GetMapping("uid/{postUid}")
+    @Operation(summary = "게시글 상세 조회")
+    public ResponseEntity<Optional<Post>> getPostByUid(@PathVariable String postUid) { // 경로 매개변수를 통해 postUid 수신
+
+        Optional<Post> post = postService.findByPostUid(postUid); // PostService를 통해 게시글과 관련된 모든 데이터 조회
+
+        if (post.isEmpty()) { // 게시글이 존재하지 않을 경우 404 Not Found 응답
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(post); // 게시글이 존재할 경우 200 OK와 함께 게시글 데이터 응답
+    }
+
+
     // 게시글 등록
     @PostMapping
     @Operation(summary = "새로운 게시글 생성")

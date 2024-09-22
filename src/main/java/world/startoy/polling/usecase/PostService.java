@@ -49,6 +49,10 @@ public class PostService {
         return Optional.of(post);
     }
 
+    public Optional<Post> findByPostUid(String postUid) {
+        return postRepository.findByPostUid(postUid);
+    }
+
     // 새로운 게시글을 생성
     // 하나라도 실패할 경우 전체 작업을 롤백하기 위해 @Transational 사용
     @Transactional
