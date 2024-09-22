@@ -16,5 +16,5 @@ public class PollDTO {
     private int pollSeq;
     private String pollCategory;
     private String pollDescription;
-    private List<PollOptionDTO> options;
+    private List<PollOptionDTO> pollOptions;
 }

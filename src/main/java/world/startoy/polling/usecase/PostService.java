@@ -57,24 +57,22 @@ public class PostService {
     public Optional<Post> findByPostUid(String postUid) {
         return postRepository.findByPostUid(postUid);
     }
-
     public PostDetailResponse getPostDetail(Post post) {
         return createPostDetailResponse(post);
     }
 
     private PostDetailResponse createPostDetailResponse(Post post) {
-        PostDetailResponse response = new PostDetailResponse();
-        response.setPostUid(post.getPostUid());
-        response.setTitle(post.getTitle());
-        response.setCreatedAt(post.getCreatedAt());
-        response.setCreatedBy(post.getCreatedBy());
-        response.setPolls(convertToPollDTOs(post.getPolls()));
-        return response;
+        return PostDetailResponse.builder()
+                .postUid(post.getPostUid())
+                .title(post.getTitle())
+                .createdAt(post.getCreatedAt())
+                .createdBy(post.getCreatedBy())
+                .polls(convertToPollDTOs(post.getPolls()))
+                .build();
     }
 
     private List<PollDTO> convertToPollDTOs(List<Poll> polls) {
         List<PollDTO> pollDTOs = new ArrayList<>();
-
         for (Poll poll : polls) {
             pollDTOs.add(getPollDTO(poll));
         }
@@ -84,12 +82,13 @@ public class PostService {
     private PollDTO getPollDTO(Poll poll) {
         List<PollOptionDTO> pollOptionDTOs = convertToPollOptionDTOs(poll.getOptions());
 
-        return new PollDTO(
-                poll.getPollUid(),
-                poll.getPollSeq(),
-                poll.getPollCategory(),
-                poll.getPollDescription(),
-                pollOptionDTOs);
+        return PollDTO.builder()
+                .pollUid(poll.getPollUid())
+                .pollSeq(poll.getPollSeq())
+                .pollCategory(poll.getPollCategory())
+                .pollDescription(poll.getPollDescription())
+                .pollOptions(pollOptionDTOs)
+                .build();
     }
 
     private List<PollOptionDTO> convertToPollOptionDTOs(List<PollOption> options) {
@@ -101,11 +100,13 @@ public class PostService {
     }
 
     private PollOptionDTO getPollOptionDTO(PollOption option) {
-        return new PollOptionDTO(
-                option.getPollOptionUid(),
-                option.getPollOptionSeq(),
-                option.getPollOptionText());
+        return PollOptionDTO.builder()
+                .pollOptionUid(option.getPollOptionUid())
+                .pollOptionSeq(option.getPollOptionSeq())
+                .pollOptionText(option.getPollOptionText())
+                .build();
     }
+
 
     // 새로운 게시글을 생성
     // 하나라도 실패할 경우 전체 작업을 롤백하기 위해 @Transational 사용
