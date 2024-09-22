@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import world.startoy.polling.usecase.dto.PollDTO;
 import world.startoy.polling.usecase.dto.PollOptionDTO;
 import world.startoy.polling.usecase.dto.PostDetailResponse;
+import world.startoy.polling.usecase.dto.PostListResponse;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,6 +37,17 @@ public class PostService {
     // 게시글 전체 가져오기
     public List<Post> findAllPosts() {
         return postRepository.findAll();
+    }
+
+
+    // 모든 게시글 조회 (홈화면 보여질 부분)
+    public List<PostListResponse> findAllPostsList(List<Post> postsList) {
+        return postsList.stream()
+                .map(post -> PostListResponse.builder()
+                        .postUid(post.getPostUid())
+                        .title(post.getTitle())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
