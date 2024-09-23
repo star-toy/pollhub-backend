@@ -14,5 +14,5 @@ public class PostCreateRequest {
     @NotNull
     private String title;
     @NotNull
-    private List<PollDTO> polls;
+    private List<PollCreateRequest> polls;
 }
