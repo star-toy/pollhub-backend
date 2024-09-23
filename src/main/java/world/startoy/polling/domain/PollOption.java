@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 public class PollOption {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "poll_option_id", nullable = false)
     private Long id; // 데이터베이스 식별자 (백엔드 내부에서 사용)
