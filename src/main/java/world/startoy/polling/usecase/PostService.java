@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -182,7 +183,9 @@ public class PostService {
 
 
     public PostCreateResponse createPost(PostCreateRequest request, String createdBy) {
+        String newPostUid = UUID.randomUUID().toString();
         Post post = Post.builder()
+                .postUid(newPostUid)
                 .title(request.getTitle())
                 .createdAt(LocalDateTime.now())
                 .createdBy(createdBy)
@@ -191,12 +194,13 @@ public class PostService {
 
         Post savedPost = postRepository.save(post);
 
-        for (PollDTO pollDto : request.getPolls()) {
+        for (PollCreateRequest pollReq : request.getPolls()) {
+            String newPollUid = UUID.randomUUID().toString();
             Poll poll = Poll.builder()
-                    .pollUid(pollDto.getPollUid()) // Poll UID
-                    .pollCategory(pollDto.getPollCategory())
-                    .pollDescription(pollDto.getPollDescription())
-                    .pollSeq(pollDto.getPollSeq())
+                    .pollUid(newPollUid)
+                    .pollCategory(pollReq.getPollCategory())
+                    .pollDescription(pollReq.getPollDescription())
+                    .pollSeq(pollReq.getPollSeq())
                     .post(savedPost) // 관계 설정
                     .isDeleted(false) // 기본값 설정
                     .createdAt(LocalDateTime.now())
@@ -205,12 +209,14 @@ public class PostService {
 
             Poll savedPoll = pollRepository.save(poll);
 
-            for (PollOptionDTO optionDto : pollDto.getPollOptions()) {
+            for (PollOptionCreateRequest optionReq : pollReq.getPollOptions()) {
+                String newPollOptionUid = UUID.randomUUID().toString();
+
                 PollOption pollOption = PollOption.builder()
+                        .pollOptionUid(newPollOptionUid)
                         .poll(savedPoll) // 관계 설정
-                        .pollOptionUid(optionDto.getPollOptionUid()) // PollOption UID
-                        .pollOptionText(optionDto.getPollOptionText())
-                        .pollOptionSeq(optionDto.getPollOptionSeq())
+                        .pollOptionText(optionReq.getPollOptionText())
+                        .pollOptionSeq(optionReq.getPollOptionSeq())
                         .isDeleted(false) // 기본값 설정
                         .createdAt(LocalDateTime.now())
                         .createdBy(createdBy)
@@ -221,7 +227,7 @@ public class PostService {
         }
 
         return PostCreateResponse.builder()
-                .postUid(savedPost.getId().toString())
+                .postUid(savedPost.getPostUid())
                 .build();
     }
 
