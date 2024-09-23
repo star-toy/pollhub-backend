@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PollOptionResponse {
-    private String optionUid;
-    private String optionText;
+    private String pollOptionUid;
+    private int pollOptionSeq;
+    private String pollOptionText;
     private int votedCount; // 득표수
 }
