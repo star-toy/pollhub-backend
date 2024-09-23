@@ -1,16 +1,17 @@
 package world.startoy.polling.usecase;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.VoteRepository;
 import world.startoy.polling.domain.Vote;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import world.startoy.polling.usecase.dto.OptionVoteRateDTO;
+import world.startoy.polling.usecase.dto.PollOptionResponse;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -77,5 +78,7 @@ public class VoteService {
                 .collect(Collectors.toList());
     }
 
-
+    public List<PollOptionResponse> getVoteCountByPollId(Long pollId) {
+        return voteRepository.countVotesByPollId(pollId);
+    }
 }
