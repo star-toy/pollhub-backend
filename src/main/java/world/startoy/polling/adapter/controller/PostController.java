@@ -49,14 +49,18 @@ public class PostController {
         public ResponseEntity<PostListResponse> findAllPostsList() {
         List<Post> postsList = postService.findAllPosts(); // Optional 로 진행시 단일 Post 객체에 대한 결과를 반환하게되어 List사용
 
+        // 포스트 리스트가 비어있을 경우 빈 PostListResponse 반환
         if (postsList.isEmpty()) {
-            return ResponseEntity.ok((PostListResponse) Collections.emptyList());
+            return ResponseEntity.ok(new PostListResponse(Collections.emptyList()));
         }
 
-        PostListResponse postListResponse = (PostListResponse) postService.findAllPostsList(postsList);
+        // PostDTO 리스트 생성
+        List<PostDTO> postDTOs = postService.findAllPostsList(postsList); // 여기서 PostDTO 리스트 생성
 
-
+        // PostListResponse 객체 생성
+        PostListResponse postListResponse = new PostListResponse(postDTOs);
         return ResponseEntity.ok(postListResponse);
+
     }
 
 
