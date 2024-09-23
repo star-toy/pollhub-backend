@@ -107,4 +107,15 @@ public class PostController {
         // return "redirect:/board/register"; 게시글 등록 후 redirect 될 화면 명시 예정
     }
 
+    // 게시글 등록
+    @PostMapping("uid/{postUid}")
+    @Operation(summary = "새로운 게시글 생성")
+    public ResponseEntity<Post> createPost() {
+        // 검증이 성공하면 서비스 호출.@Valid 어노테이션이 사용되어 Post 객체의 유효성을 검증
+        // 유효성 검사가 실패하면 400 Bad Request 상태 코드가 자동으로 반환
+        Post createdPost = postService.createPost(post);
+
+        return ResponseEntity.status(201).body(createdPost); // 201 : 리소스를 생성하는 요청(예: POST 요청)을 처리할 때 사용
+        // return "redirect:/board/register"; 게시글 등록 후 redirect 될 화면 명시 예정
+    }
 }
