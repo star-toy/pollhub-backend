@@ -1,8 +1,11 @@
 package world.startoy.polling.adapter.repository;
 
-import world.startoy.polling.domain.Vote;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import world.startoy.polling.domain.Vote;
+import world.startoy.polling.usecase.dto.PollOptionResponse;
 
 import java.util.List;
 
@@ -12,4 +15,18 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Vote> findByPollIdAndVoterIp(Long pollId, String voterIp);
 
     List<Vote> findByPollId(Long pollId);
+
+
+    @Query("SELECT " +
+            "o.pollOptionUid as pollOptionUid, " +
+            "o.pollOptionText as pollOptionText, " +
+            "o.pollOptionSeq as pollOptionSeq, " +
+            "COUNT(v.id) as votedCount " +
+            "FROM Vote v " +
+            "JOIN PollOption o " +
+            "ON v.optionId = o.id " +
+            "WHERE v.pollId = :pollId " +
+            "GROUP BY o.pollOptionUid, o.pollOptionText, o.pollOptionSeq")
+    List<PollOptionResponse> countVotesByPollId(@Param("pollId") Long pollId);
+
 }
