@@ -2,7 +2,11 @@ package world.startoy.polling.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +18,6 @@ import java.time.LocalDateTime;
 public class Vote {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vote_id", nullable = false)
     private Long id;
@@ -24,12 +27,12 @@ public class Vote {
     private String voteUid;
 
     @NotNull
-    @Column(name = "poll_id", nullable = false)
-    private Long pollId;
+    @Column(name = "poll_uid", nullable = false, length = 36)
+    private String pollUid;
 
     @NotNull
-    @Column(name = "option_id", nullable = false)
-    private Long optionId;
+    @Column(name = "poll_option_uid", nullable = false, length = 36)
+    private String pollOptionUid;
 
     @NotNull
     @Column(name = "voter_ip", nullable = false, length = 255)
