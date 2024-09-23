@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import world.startoy.polling.usecase.dto.PostDTO;
 import world.startoy.polling.usecase.dto.PostDetailResponse;
+import world.startoy.polling.usecase.dto.PostListResponse;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +41,28 @@ public class PostController {
         // 게시글이 있을 경우 게시글 목록과 함께 200 OK 반환
         return ResponseEntity.ok(posts);
     }
+
+    // 모든 게시글 조회 (홈화면에 보여질 게시글 전체 list)
+    @GetMapping("/list")
+    @Operation(summary = "모든 게시글 조회")
+    //public ResponseEntity<List<PostDTO>> findAllPostsList() {
+        public ResponseEntity<PostListResponse> findAllPostsList() {
+        List<Post> postsList = postService.findAllPosts(); // Optional 로 진행시 단일 Post 객체에 대한 결과를 반환하게되어 List사용
+
+        // 포스트 리스트가 비어있을 경우 빈 PostListResponse 반환
+        if (postsList.isEmpty()) {
+            return ResponseEntity.ok(new PostListResponse(Collections.emptyList()));
+        }
+
+        // PostDTO 리스트 생성
+        List<PostDTO> postDTOs = postService.findAllPostsList(postsList); // 여기서 PostDTO 리스트 생성
+
+        // PostListResponse 객체 생성
+        PostListResponse postListResponse = new PostListResponse(postDTOs);
+        return ResponseEntity.ok(postListResponse);
+
+    }
+
 
 
     //  특정 ID의 게시글을 조회
