@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostCreateResponse {
-    private Long postUid;
+    private String postUid;
 }
