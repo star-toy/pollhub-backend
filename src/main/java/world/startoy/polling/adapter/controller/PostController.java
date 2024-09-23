@@ -1,5 +1,7 @@
 package world.startoy.polling.adapter.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import world.startoy.polling.domain.Post;
 import world.startoy.polling.usecase.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,13 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import world.startoy.polling.usecase.dto.PostDTO;
-import world.startoy.polling.usecase.dto.PostDetailResponse;
-import world.startoy.polling.usecase.dto.PostListResponse;
+import world.startoy.polling.usecase.UserService;
+import world.startoy.polling.usecase.dto.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +24,7 @@ import java.util.Optional;
 public class PostController {
 
     private final PostService postService;
+    private final UserService userService;
 
 
     // 모든 게시글 조회
@@ -108,14 +108,14 @@ public class PostController {
     }
 
     // 게시글 등록
-    @PostMapping("uid/{postUid}")
+    @PostMapping("new/")
     @Operation(summary = "새로운 게시글 생성")
-    public ResponseEntity<Post> createPost() {
-        // 검증이 성공하면 서비스 호출.@Valid 어노테이션이 사용되어 Post 객체의 유효성을 검증
-        // 유효성 검사가 실패하면 400 Bad Request 상태 코드가 자동으로 반환
-        Post createdPost = postService.createPost(post);
-
-        return ResponseEntity.status(201).body(createdPost); // 201 : 리소스를 생성하는 요청(예: POST 요청)을 처리할 때 사용
-        // return "redirect:/board/register"; 게시글 등록 후 redirect 될 화면 명시 예정
+    public ResponseEntity<PostCreateResponse> createPost(
+            @Valid @RequestBody PostCreateRequest request,
+            HttpServletRequest httpRequest) {
+        String uploaderIp = userService.getClientIp(httpRequest);
+        PostCreateResponse response = postService.createPost(request, uploaderIp);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 }
