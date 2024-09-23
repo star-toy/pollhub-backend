@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class Vote {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vote_id", nullable = false)
     private Long id;
