@@ -12,10 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import world.startoy.polling.usecase.dto.PollDTO;
-import world.startoy.polling.usecase.dto.PollOptionDTO;
-import world.startoy.polling.usecase.dto.PostDetailResponse;
-import world.startoy.polling.usecase.dto.PostListResponse;
+import world.startoy.polling.usecase.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,13 +38,21 @@ public class PostService {
 
 
     // 모든 게시글 조회 (홈화면 보여질 부분)
-    public List<PostListResponse> findAllPostsList(List<Post> postsList) {
-        return postsList.stream()
-                .map(post -> PostListResponse.builder()
-                        .postUid(post.getPostUid())
-                        .title(post.getTitle())
-                        .build())
-                .collect(Collectors.toList());
+
+    public List<PostDTO> findAllPostsList(List<Post> postsList) {
+       // public List<PostListResponse> findAllPostsList(List<Post> postsList) {
+//        return postsList.stream()
+//                .map(post -> PostListResponse.builder()
+//                        .postUid(post.getPostUid())
+//                        .title(post.getTitle())
+//                        .build())
+//                .collect(Collectors.toList());
+            return postsList.stream()
+                    .map(post -> PostDTO.builder()
+                            .postUid(post.getPostUid())
+                            .title(post.getTitle())
+                            .build())
+                    .collect(Collectors.toList());
     }
 
 
