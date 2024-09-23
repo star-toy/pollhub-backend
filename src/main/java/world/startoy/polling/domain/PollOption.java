@@ -59,4 +59,7 @@ public class PollOption {
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
+
+    @Column(name = "vote_count", nullable = true)
+    private Integer voteCount;
 }
