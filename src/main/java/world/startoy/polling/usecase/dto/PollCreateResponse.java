@@ -15,5 +15,5 @@ public class PollCreateResponse {
     private int pollSeq;
     private String pollCategory;
     private String pollDescription;
-    private List<PollOptionDTO> pollOptions;
+    private List<PollOptionCreateResponse> pollOptions;
 }
