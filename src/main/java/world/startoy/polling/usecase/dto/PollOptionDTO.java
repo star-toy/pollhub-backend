@@ -13,4 +13,5 @@ public class PollOptionDTO {
     private String pollOptionUid;
     private int pollOptionSeq;
     private String pollOptionText;
+    private int votedCount;
 }
