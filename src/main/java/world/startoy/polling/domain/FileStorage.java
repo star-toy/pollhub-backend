@@ -23,24 +23,9 @@ public class FileStorage {
     private String fileUid;
 
     @NotNull
-    @Column(name = "file_name", nullable = false, length = 255)
-    private String fileName;
-
-    @NotNull
     @Column(name = "file_full_name", nullable = false, length = 255)
     private String fileFullName;
 
-    @NotNull
-    @Column(name = "file_path", nullable = false, length = 1000)
-    private String filePath;
-
-    @NotNull
-    @Column(name = "file_full_path", nullable = false, length = 1000)
-    private String fileFullPath;
-
-    @NotNull
-    @Column(name = "file_extension", nullable = false, length = 10)
-    private String fileExtension;
 
     @NotNull
     @Column(name = "is_deleted", nullable = false)
