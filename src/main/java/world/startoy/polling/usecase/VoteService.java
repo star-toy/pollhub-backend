@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.VoteRepository;
 import world.startoy.polling.domain.Vote;
+import world.startoy.polling.usecase.dto.OptionVoteRateDTO;
 import world.startoy.polling.usecase.dto.PollOptionResponse;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
