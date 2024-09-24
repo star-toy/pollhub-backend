@@ -43,7 +43,7 @@ public class PollOptionService {
         }
     }
 
-    
+
     // 투표 옵션 생성
     @Transactional
     public PollOption createOption(PollOption option) {

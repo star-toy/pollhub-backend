@@ -46,7 +46,7 @@ public class PostController {
     @GetMapping("/list")
     @Operation(summary = "모든 게시글 조회")
     //public ResponseEntity<List<PostDTO>> findAllPostsList() {
-        public ResponseEntity<PostListResponse> findAllPostsList() {
+    public ResponseEntity<PostListResponse> findAllPostsList() {
         List<Post> postsList = postService.findAllPosts(); // Optional 로 진행시 단일 Post 객체에 대한 결과를 반환하게되어 List사용
 
         // 포스트 리스트가 비어있을 경우 빈 PostListResponse 반환
@@ -107,6 +107,8 @@ public class PostController {
         // return "redirect:/board/register"; 게시글 등록 후 redirect 될 화면 명시 예정
     }
 
+
+
     // 게시글 등록
     @PostMapping("new/")
     @Operation(summary = "새로운 게시글 생성")
@@ -119,3 +121,4 @@ public class PostController {
     }
 
 }
+

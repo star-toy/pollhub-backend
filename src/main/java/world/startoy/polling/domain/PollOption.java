@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import world.startoy.polling.common.Uploadable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -69,5 +70,6 @@ public class PollOption implements Uploadable {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
 
 }

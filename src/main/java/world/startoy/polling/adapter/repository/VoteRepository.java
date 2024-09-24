@@ -17,6 +17,7 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Vote> findByPollId(Long pollId);
 
 
+
     @Query("SELECT " +
             "o.pollOptionUid as pollOptionUid, " +
             "o.pollOptionText as pollOptionText, " +
@@ -30,3 +31,4 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Tuple> countVotesByPollId(@Param("pollId") Long pollId);
 
 }
+

@@ -61,4 +61,5 @@ public class Post implements Uploadable {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Poll> polls;
+
 }

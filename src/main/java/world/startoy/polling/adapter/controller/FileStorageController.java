@@ -31,7 +31,7 @@ public class FileStorageController {
     public ResponseEntity<Map<String, String>> uploadFile(
             @RequestPart("file") MultipartFile file,
             @RequestParam("uploadableType") String uploadableType,
-            @RequestParam("uploadableId") Long uploadableId,
+            @RequestParam("fileLinkedUid") String fileLinkedUid,
             HttpServletRequest request) {
 
         Map<String, String> response = new HashMap<>();
@@ -48,9 +48,9 @@ public class FileStorageController {
             // Uploadable 객체 생성 (Post 객체 예시)
             Uploadable uploadable;
             if ("Post".equals(uploadableType)) {
-                uploadable = fileStorageService.getPostById(uploadableId); // 서비스 호출
+                uploadable = fileStorageService.getPostById(fileLinkedUid); // 서비스 호출
             } else if ("PollOption".equals(uploadableType)) {
-                uploadable = fileStorageService.getPollOptionById(uploadableId); // 서비스 호출
+                uploadable = fileStorageService.getPollOptionByUid(fileLinkedUid); // 서비스 호출
             } else {
                 throw new IllegalArgumentException("Invalid uploadable type");
             }
