@@ -45,4 +45,12 @@ public class FileStorage {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
+    // 업로드 가능한 엔티티의 ID
+    @Column(name = "uploadable_id")
+    private Long uploadableId;
+
+    // 업로드 가능한 엔티티의 타입 (Post, PollOption 등)
+    @Column(name = "uploadable_type")
+    private String uploadableType;
 }
