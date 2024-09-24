@@ -17,8 +17,8 @@ import java.util.List;
 public class Post implements Uploadable {
 
     @Override
-    public Long getId() {
-        return this.id;
+    public String getLinkedUid() {
+        return this.postUid;
     }
 
     @Override

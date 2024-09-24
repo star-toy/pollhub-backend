@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 public class PollOption implements Uploadable {
 
     @Override
-    public Long getId() {
-        return this.id;
+    public String getLinkedUid() {
+        return this.pollOptionUid;
     }
 
     @Override

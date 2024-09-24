@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Builder
 public class PostDTO {
 
-    // 와
     private String postUid;
     private String title;
     private String createdBy;
@@ -20,5 +19,3 @@ public class PostDTO {
 
 
 }
-
-

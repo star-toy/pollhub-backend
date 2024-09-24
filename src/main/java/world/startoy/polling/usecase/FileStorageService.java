@@ -62,7 +62,7 @@ public class FileStorageService {
                     .isDeleted(false)                     // 삭제 여부
                     .createdAt(LocalDateTime.now())       // 생성일자
                     .createdBy(uploaderIp)                // 생성자 IP
-                    .uploadableId(uploadable.getId()) // 연관된 엔티티 ID 설정
+                    .fileLinkedUid(uploadable.getLinkedUid()) // 연관된 엔티티 UID 설정
                     .uploadableType(uploadable.getUploadableType()) // 연관된 엔티티 타입 설정
                     .build();
 
@@ -84,15 +84,15 @@ public class FileStorageService {
     }
 
     // Post 객체를 ID로 조회하는 메서드 (구현)
-    public Uploadable getPostById(Long id) {
-        return postRepository.findById(id) // ID로 Post 조회
-                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + id));
+    public Uploadable getPostById(String fileLinkedUid) {
+        return postRepository.findByPostUid(fileLinkedUid) // ID로 Post 조회
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with fileLinkedUid: " + fileLinkedUid));
     }
 
     // PollOption 객체를 ID로 조회하는 메서드 (구현)
-    public Uploadable getPollOptionById(Long id) {
-        return pollOptionRepository.findById(id) // ID로 PollOption 조회
-                .orElseThrow(() -> new IllegalArgumentException("PollOption not found with ID: " + id));
+    public Uploadable getPollOptionByUid(String fileLinkedUid) {
+        return pollOptionRepository.findByPollOptionUid(fileLinkedUid) // ID로 PollOption 조회
+                .orElseThrow(() -> new IllegalArgumentException("PollOption not found with fileLinkedUid: " + fileLinkedUid));
     }
 
     // 파일 확장자 추출 메서드

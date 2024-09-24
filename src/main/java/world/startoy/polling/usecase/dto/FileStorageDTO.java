@@ -8,10 +8,6 @@ import lombok.Data;
 public class FileStorageDTO {
 
     private String fileUid;
-    private String fileName;
-    //private String fileUrl;  // S3에 저장된 파일의 URL
-    //private String fileExtension;
-    //private String createdBy;
-    //private boolean isDeleted;
+    private String fileFullName; // 파일명+uid
 
 }
