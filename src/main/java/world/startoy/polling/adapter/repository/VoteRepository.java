@@ -1,11 +1,11 @@
 package world.startoy.polling.adapter.repository;
 
+import jakarta.persistence.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import world.startoy.polling.domain.Vote;
-import world.startoy.polling.usecase.dto.PollOptionResponse;
 
 import java.util.List;
 
@@ -27,6 +27,6 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
             "ON v.optionId = o.id " +
             "WHERE v.pollId = :pollId " +
             "GROUP BY o.pollOptionUid, o.pollOptionText, o.pollOptionSeq")
-    List<PollOptionResponse> countVotesByPollId(@Param("pollId") Long pollId);
+    List<Tuple> countVotesByPollId(@Param("pollId") Long pollId);
 
 }

@@ -1,5 +1,6 @@
 package world.startoy.polling.usecase;
 
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
@@ -79,6 +80,14 @@ public class VoteService {
     }
 
     public List<PollOptionResponse> getVoteCountByPollId(Long pollId) {
-        return voteRepository.countVotesByPollId(pollId);
+        List<Tuple> pollOptions = voteRepository.countVotesByPollId(pollId);
+        return pollOptions.stream()
+                .map(tuple -> new PollOptionResponse(
+                        tuple.get("pollOptionUid", String.class),
+                        tuple.get("pollOptionSeq", Integer.class),  // int -> Integer.class로 수정
+                        tuple.get("pollOptionText", String.class),
+                        tuple.get("votedCount", Long.class).intValue() // Long으로 가져온 후 int로 변환
+                ))
+                .collect(Collectors.toList());
     }
 }
