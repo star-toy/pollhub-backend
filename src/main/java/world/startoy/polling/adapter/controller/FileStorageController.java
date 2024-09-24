@@ -26,6 +26,7 @@ public class FileStorageController {
     private final UserService userService;
 
 
+    //
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<Map<String, String>> uploadFile(
             @RequestPart("file") MultipartFile file,

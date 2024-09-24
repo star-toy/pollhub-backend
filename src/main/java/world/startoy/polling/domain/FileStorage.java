@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class FileStorage {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "file_id", nullable = false)
     private Long id;
