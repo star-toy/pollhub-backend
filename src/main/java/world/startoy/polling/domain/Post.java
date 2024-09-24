@@ -3,6 +3,8 @@ package world.startoy.polling.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import world.startoy.polling.common.Uploadable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,7 +14,17 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "pl_post")
-public class Post {
+public class Post implements Uploadable {
+
+    @Override
+    public String getLinkedUid() {
+        return this.postUid;
+    }
+
+    @Override
+    public String getUploadableType() {
+        return "Post";
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

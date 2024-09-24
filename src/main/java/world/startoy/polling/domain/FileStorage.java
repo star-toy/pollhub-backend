@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class FileStorage {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "file_id", nullable = false)
     private Long id;
@@ -24,24 +23,9 @@ public class FileStorage {
     private String fileUid;
 
     @NotNull
-    @Column(name = "file_name", nullable = false, length = 255)
-    private String fileName;
-
-    @NotNull
     @Column(name = "file_full_name", nullable = false, length = 255)
     private String fileFullName;
 
-    @NotNull
-    @Column(name = "file_path", nullable = false, length = 1000)
-    private String filePath;
-
-    @NotNull
-    @Column(name = "file_full_path", nullable = false, length = 1000)
-    private String fileFullPath;
-
-    @NotNull
-    @Column(name = "file_extension", nullable = false, length = 10)
-    private String fileExtension;
 
     @NotNull
     @Column(name = "is_deleted", nullable = false)
@@ -61,4 +45,14 @@ public class FileStorage {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
+    @NotNull
+    @Column(name = "file_linked_uid", nullable = false, length = 36)
+    private String fileLinkedUid;
+
+    // 업로드 가능한 엔티티의 타입 (Post, PollOption 등)
+    @Column(name = "uploadable_type")
+    private String uploadableType;
+
+
 }

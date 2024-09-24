@@ -112,6 +112,7 @@ public class PostService {
                 .collect(Collectors.toList()); // 변환된 PollOptionDTO 리스트로 수집
     }
 
+
     private PollOptionDTO getPollOptionDTO (PollOption option){
         return PollOptionDTO.builder()
                 .pollOptionUid(option.getPollOptionUid())
@@ -119,6 +120,7 @@ public class PostService {
                 .pollOptionText(option.getPollOptionText())
                 .build();
     }
+
 
     // 새로운 게시글을 생성
     // 하나라도 실패할 경우 전체 작업을 롤백하기 위해 @Transational 사용
@@ -176,6 +178,7 @@ public class PostService {
 
                 }
             }
+
         }
 
         return savedPost;
