@@ -27,7 +27,6 @@ public class Post implements Uploadable {
     }
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
     private Long id;
@@ -40,7 +39,6 @@ public class Post implements Uploadable {
     @Column(name = "title", nullable = false, length = 200)
     private String title;
 
-    @NotNull
     @Column(name = "file_id", length = 36)
     private String fileId;
 
