@@ -1,5 +1,6 @@
 package world.startoy.polling.adapter.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import world.startoy.polling.domain.PollOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

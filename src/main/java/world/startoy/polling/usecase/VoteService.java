@@ -53,9 +53,9 @@ public class VoteService {
 
         // 각 optionId별 투표 수 집계
         /*
-        * Java Stream API 를 이용 Vote 엔티티 리스트를 optionId를 기준으로 그룹화하고
-        * 각 그룹의 투표 수를 계산하여 Map 형태로 반환
-        * */
+         * Java Stream API 를 이용 Vote 엔티티 리스트를 optionId를 기준으로 그룹화하고
+         * 각 그룹의 투표 수를 계산하여 Map 형태로 반환
+         * */
         Map<Long, Long> votesPerOption = votes.stream()
                 .collect(Collectors.groupingBy(Vote::getOptionId, Collectors.counting()));
 

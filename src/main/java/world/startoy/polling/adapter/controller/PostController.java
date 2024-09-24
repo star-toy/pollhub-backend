@@ -46,7 +46,7 @@ public class PostController {
     @GetMapping("/list")
     @Operation(summary = "모든 게시글 조회")
     //public ResponseEntity<List<PostDTO>> findAllPostsList() {
-        public ResponseEntity<PostListResponse> findAllPostsList() {
+    public ResponseEntity<PostListResponse> findAllPostsList() {
         List<Post> postsList = postService.findAllPosts(); // Optional 로 진행시 단일 Post 객체에 대한 결과를 반환하게되어 List사용
 
         // 포스트 리스트가 비어있을 경우 빈 PostListResponse 반환
