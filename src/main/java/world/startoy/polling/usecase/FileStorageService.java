@@ -1,97 +1,103 @@
 package world.startoy.polling.usecase;
 
 import world.startoy.polling.adapter.repository.FileStorageRepository;
+import world.startoy.polling.adapter.repository.PollOptionRepository;
+import world.startoy.polling.adapter.repository.PostRepository;
+import world.startoy.polling.common.Uploadable;
 import world.startoy.polling.domain.FileStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import world.startoy.polling.usecase.dto.FileStorageDTO;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class FileStorageService {
 
+    private final PostRepository postRepository;
+    private final PollOptionRepository pollOptionRepository;
     private final FileStorageRepository fileStorageRepository;
-   // private final String baseUploadDir = "/home/user/uploads";
+    private final S3Service s3Service;
 
-    private final String baseUploadDir = "/uploads/";
-
-
-    // 파일 저장
-    public FileStorage saveFile(MultipartFile file, String uploaderIp) throws IOException {
-
-        // 파일 유효성 확인
+    // 파일 업로드
+    @Transactional
+    public FileStorage saveFile(MultipartFile file, Uploadable uploadable, String uploaderIp) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File must not be null or empty");
         }
 
         try {
-
-            // 실제 파일 업로드 경로 가져오기
-            String uploadDirFullPath = getUploadDirFullPath();
-
-            // 폴더 존재 여부 확인 및 생성
-            Path path = Path.of(uploadDirFullPath);
-            if (!Files.exists(path)) {
-                Files.createDirectories(path); // 폴더 생성 실패 시 IOException 발생 가능
-                System.out.println("Upload Directory: " + uploadDirFullPath);
-            }
-
+            // 새로운 UUID 생성
             String fileUid = UUID.randomUUID().toString();
-            String fileName = file.getOriginalFilename(); // File Extension 포함 // ex) filename.png
 
-            // 파일명 유효성 확인
-            if (fileName == null || !fileName.contains(".")) {
+            // 원본 파일명과 확장자 추출
+            String originalFileName = file.getOriginalFilename();
+
+            if (originalFileName == null || !originalFileName.contains(".")) {
                 throw new FileValidationException("Invalid file name: The file name is either null or missing a file extension.");
             }
 
-            // 파일 확장자 추출
-            String[] fileNameParts = fileName.split("\\.");
-            if (fileNameParts.length < 2) {
-                throw new FileValidationException("File must have an extension");
-            }
+            // 확장자 추출
+            String fileExtension = getFileExtension(originalFileName);
 
-            String fileNameWithoutExtension = fileNameParts[0];
-            String fileExtension = fileNameParts[1];
+            // 파일 UID를 포함한 새 파일명 생성
+            String fileFullName = String.format("%s_%s.%s",
+                    originalFileName.substring(0, originalFileName.lastIndexOf('.')),
+                    fileUid,
+                    fileExtension);
 
-            // 중복 파일명 방지
-            String fileFullName = String.format("%s_%s.%s", fileNameWithoutExtension, fileUid, fileExtension); // ex) filename_uuid.png
+            // S3에 파일 업로드
+            String fileUrl = s3Service.uploadFile(file, fileFullName);
+            System.out.println("fileUrl : " + fileUrl);
 
-            // 파일 저장
-            Path filePath = path.resolve(fileFullName);
-            Files.copy(file.getInputStream(), filePath); // 파일 저장 실패 시 IOException 발생
-
-            // FileStorage 객체 생성
+            // FileStorage 엔티티 생성 및 저장
             FileStorage fileStorage = FileStorage.builder()
-                    .fileUid(fileUid)
-                    .fileName(fileName)
-                    .fileFullName(fileFullName)
-                    .filePath(filePath.toString())
-                    .fileFullPath(filePath.toAbsolutePath().toString())
-                    .fileExtension(fileExtension)
-                    .isDeleted(false)
-                    .createdAt(LocalDateTime.now())
-                    .createdBy(uploaderIp)
+                    .fileUid(fileUid)                     // 파일 UUID
+                    .fileFullName(fileFullName)           // 전체 파일명 (파일명 + UUID + 확장자)
+                    .isDeleted(false)                     // 삭제 여부
+                    .createdAt(LocalDateTime.now())       // 생성일자
+                    .createdBy(uploaderIp)                // 생성자 IP
+                    .fileLinkedUid(uploadable.getLinkedUid()) // 연관된 엔티티 UID 설정
+                    .uploadableType(uploadable.getUploadableType()) // 연관된 엔티티 타입 설정
                     .build();
 
-            return fileStorageRepository.save(fileStorage);
+            // DB에 저장
+            FileStorage savedFileStorage = fileStorageRepository.save(fileStorage);
+            System.out.println("FileStorage after save: " + savedFileStorage);
+
+            return savedFileStorage;
 
         } catch (FileValidationException e) {
-            throw e; // 클라이언트 문제는 그대로 전달
+            throw e;
         } catch (IOException e) {
-            // 파일 저장 관련 오류는 서버 문제로 구분
-            throw new FileStorageException("Failed to store file on the server", e);
+            System.out.println(e.getMessage());
+            throw new FileStorageException("Failed to store file on S3", e);
         } catch (Exception e) {
-            // 기타 예외 처리
+            System.out.println(e.getMessage());
             throw new FileStorageException("An unexpected error occurred while processing the file", e);
         }
+    }
+
+    // Post 객체를 ID로 조회하는 메서드 (구현)
+    public Uploadable getPostById(String fileLinkedUid) {
+        return postRepository.findByPostUid(fileLinkedUid) // ID로 Post 조회
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with fileLinkedUid: " + fileLinkedUid));
+    }
+
+    // PollOption 객체를 ID로 조회하는 메서드 (구현)
+    public Uploadable getPollOptionByUid(String fileLinkedUid) {
+        return pollOptionRepository.findByPollOptionUid(fileLinkedUid) // ID로 PollOption 조회
+                .orElseThrow(() -> new IllegalArgumentException("PollOption not found with fileLinkedUid: " + fileLinkedUid));
+    }
+
+    // 파일 확장자 추출 메서드
+    private String getFileExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     // Custom Exception for file validation issues
@@ -108,10 +114,28 @@ public class FileStorageService {
         }
     }
 
-    // 실제 파일 업로드 경로 반환  // ex) baseUploadDir/yyyy/MM/dd/fileName.png
-    public String getUploadDirFullPath() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        String formatedNow = LocalDate.now().format(formatter);
-        return String.format("%s/%s",baseUploadDir, formatedNow); // ex) uploads/2024/9/19/example.png
+
+    // fileUid를 이용하여 파일 정보를 조회하는 메서드
+    @Transactional(readOnly = true)
+    public FileStorage getFileByUid(String fileUid) {
+        return fileStorageRepository.findByFileUid(fileUid)
+                .orElseThrow(() -> new IllegalArgumentException("File not found with UID: " + fileUid));
     }
+
+    // FileStorage 엔티티를 FileStorageDTO로 변환하는 메서드
+    @Transactional(readOnly = true)
+    public FileStorageDTO getFileDtoByUid(String fileUid) {
+        FileStorage fileStorage = getFileByUid(fileUid);
+        return convertToDto(fileStorage);
+    }
+
+    // FileStorage 엔티티를 FileStorageDTO로 변환
+    private FileStorageDTO convertToDto(FileStorage fileStorage) {
+        return FileStorageDTO.builder()
+                .fileUid(fileStorage.getFileUid())
+                .fileFullName(fileStorage.getFileFullName())
+                .build();
+    }
+
+
 }
