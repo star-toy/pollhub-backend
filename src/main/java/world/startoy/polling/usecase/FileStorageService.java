@@ -39,8 +39,6 @@ public class FileStorageService {
             // S3에 파일 업로드
             String fileUrl = s3Service.uploadFile(file, fileFullName);
             System.out.println("fileUrl : " + fileUrl);
-            String cloudFrontUrl = "https://d1js8xtrf18xub.cloudfront.net";
-            System.out.println("asdf : " + cloudFrontUrl + "/" + fileFullName);
 
 
             FileStorage fileStorage = FileStorage.builder()
