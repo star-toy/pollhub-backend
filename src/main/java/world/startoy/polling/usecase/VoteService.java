@@ -1,16 +1,16 @@
 package world.startoy.polling.usecase;
 
+import jakarta.persistence.Tuple;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.VoteRepository;
 import world.startoy.polling.domain.Vote;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import world.startoy.polling.usecase.dto.OptionVoteRateDTO;
+import world.startoy.polling.usecase.dto.PollOptionResponse;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -78,4 +78,16 @@ public class VoteService {
     }
 
 
+
+    public List<PollOptionResponse> getVoteCountByPollId(Long pollId) {
+        List<Tuple> pollOptions = voteRepository.countVotesByPollId(pollId);
+        return pollOptions.stream()
+                .map(tuple -> new PollOptionResponse(
+                        tuple.get("pollOptionUid", String.class),
+                        tuple.get("pollOptionSeq", Integer.class),  // int -> Integer.class로 수정
+                        tuple.get("pollOptionText", String.class),
+                        tuple.get("votedCount", Long.class).intValue() // Long으로 가져온 후 int로 변환
+                ))
+                .collect(Collectors.toList());
+    }
 }

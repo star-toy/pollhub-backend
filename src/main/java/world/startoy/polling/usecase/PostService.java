@@ -1,23 +1,23 @@
 package world.startoy.polling.usecase;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.PollRepository;
 import world.startoy.polling.adapter.repository.PostRepository;
 import world.startoy.polling.domain.Poll;
 import world.startoy.polling.domain.PollOption;
 import world.startoy.polling.domain.Post;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import world.startoy.polling.usecase.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -26,9 +26,10 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final PollService pollService;
     private final PollRepository pollRepository;
     private final PollOptionRepository pollOptionRepository;
+    private final PollService pollService;
+    private final VoteService voteService;
 
 
     // 게시글 전체 가져오기
@@ -73,35 +74,36 @@ public class PostService {
         return postRepository.findByPostUid(postUid);
     }
 
-    public PostDetailResponse getPostDetail (Post post){
+    public PostDetailResponse getPostDetail(Post post) {
         return createPostDetailResponse(post);
     }
 
-    private PostDetailResponse createPostDetailResponse (Post post){
+    private PostDetailResponse createPostDetailResponse(Post post) {
         return PostDetailResponse.builder()
                 .postUid(post.getPostUid())
                 .title(post.getTitle())
                 .createdAt(post.getCreatedAt())
                 .createdBy(post.getCreatedBy())
-                .polls(convertToPollDTOs(post.getPolls()))
+                .polls(convertToPollDetailResponses(post.getPolls()))
                 .build();
     }
 
-    private List<PollDTO> convertToPollDTOs (List < Poll > polls) {
+    private List<PollDetailResponse> convertToPollDetailResponses(List<Poll> polls) {
         return polls.stream()
-                .map(this::getPollDTO) // 각 Poll을 PollDTO로 변환
-                .collect(Collectors.toList()); // 변환된 PollDTO 리스트로 수집
+                .map(this::getPollDetailResponse)  // 각 Poll을 PollDetailResponse로 변환
+                .collect(Collectors.toList());  // 변환된 PollDetailResponse 리스트로 수집
     }
 
-    private PollDTO getPollDTO (Poll poll){
-        List<PollOptionDTO> pollOptionDTOs = convertToPollOptionDTOs(poll.getOptions());
+    private PollDetailResponse getPollDetailResponse(Poll poll) {
+        // pollId로부터 득표 정보를 가져오는 부분 추가
+        List<PollOptionResponse> pollOptionResponses = voteService.getVoteCountByPollId(poll.getId());
 
-        return PollDTO.builder()
+        return PollDetailResponse.builder()
                 .pollUid(poll.getPollUid())
                 .pollSeq(poll.getPollSeq())
                 .pollCategory(poll.getPollCategory())
                 .pollDescription(poll.getPollDescription())
-                .pollOptions(pollOptionDTOs)
+                .pollOptions(pollOptionResponses)  // PollOptionResponse 사용
                 .build();
     }
 
@@ -110,6 +112,7 @@ public class PostService {
                 .map(this::getPollOptionDTO) // 각 PollOption을 PollOptionDTO로 변환
                 .collect(Collectors.toList()); // 변환된 PollOptionDTO 리스트로 수집
     }
+
 
     private PollOptionDTO getPollOptionDTO (PollOption option){
         return PollOptionDTO.builder()
@@ -176,9 +179,60 @@ public class PostService {
 
                 }
             }
+
         }
 
         return savedPost;
+    }
+
+
+    public PostCreateResponse createPost(PostCreateRequest request, String createdBy) {
+        String newPostUid = UUID.randomUUID().toString();
+        Post post = Post.builder()
+                .postUid(newPostUid)
+                .title(request.getTitle())
+                .createdAt(LocalDateTime.now())
+                .createdBy(createdBy)
+                .isDeleted(false) // 기본값 설정
+                .build();
+
+        Post savedPost = postRepository.save(post);
+
+        for (PollCreateRequest pollReq : request.getPolls()) {
+            String newPollUid = UUID.randomUUID().toString();
+            Poll poll = Poll.builder()
+                    .pollUid(newPollUid)
+                    .pollCategory(pollReq.getPollCategory())
+                    .pollDescription(pollReq.getPollDescription())
+                    .pollSeq(pollReq.getPollSeq())
+                    .post(savedPost) // 관계 설정
+                    .isDeleted(false) // 기본값 설정
+                    .createdAt(LocalDateTime.now())
+                    .createdBy(createdBy)
+                    .build();
+
+            Poll savedPoll = pollRepository.save(poll);
+
+            for (PollOptionCreateRequest optionReq : pollReq.getPollOptions()) {
+                String newPollOptionUid = UUID.randomUUID().toString();
+
+                PollOption pollOption = PollOption.builder()
+                        .pollOptionUid(newPollOptionUid)
+                        .poll(savedPoll) // 관계 설정
+                        .pollOptionText(optionReq.getPollOptionText())
+                        .pollOptionSeq(optionReq.getPollOptionSeq())
+                        .isDeleted(false) // 기본값 설정
+                        .createdAt(LocalDateTime.now())
+                        .createdBy(createdBy)
+                        .build();
+
+                pollOptionRepository.save(pollOption);
+            }
+        }
+
+        return PostCreateResponse.builder()
+                .postUid(savedPost.getPostUid())
+                .build();
     }
 
 }

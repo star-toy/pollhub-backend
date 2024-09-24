@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class PollOptionDTO {
-    private String pollOptionUid;
-    private int pollOptionSeq;
-    private String pollOptionText;
-    private int votedCount;
+public class PostCreateResponse {
+    private String postUid;
 }

@@ -17,7 +17,6 @@ import java.util.List;
 public class Poll {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "poll_id", nullable = false)
     private Long id;

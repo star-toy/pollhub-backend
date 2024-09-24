@@ -1,5 +1,7 @@
 package world.startoy.polling.adapter.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import world.startoy.polling.domain.Post;
 import world.startoy.polling.usecase.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,13 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import world.startoy.polling.usecase.dto.PostDTO;
-import world.startoy.polling.usecase.dto.PostDetailResponse;
-import world.startoy.polling.usecase.dto.PostListResponse;
+import world.startoy.polling.usecase.UserService;
+import world.startoy.polling.usecase.dto.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +24,7 @@ import java.util.Optional;
 public class PostController {
 
     private final PostService postService;
+    private final UserService userService;
 
 
     // 모든 게시글 조회
@@ -107,4 +107,18 @@ public class PostController {
         // return "redirect:/board/register"; 게시글 등록 후 redirect 될 화면 명시 예정
     }
 
+
+
+    // 게시글 등록
+    @PostMapping("new/")
+    @Operation(summary = "새로운 게시글 생성")
+    public ResponseEntity<PostCreateResponse> createPost(
+            @Valid @RequestBody PostCreateRequest request,
+            HttpServletRequest httpRequest) {
+        String uploaderIp = userService.getClientIp(httpRequest);
+        PostCreateResponse response = postService.createPost(request, uploaderIp);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
 }
+

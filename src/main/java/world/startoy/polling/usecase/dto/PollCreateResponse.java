@@ -5,13 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PollOptionDTO {
-    private String pollOptionUid;
-    private int pollOptionSeq;
-    private String pollOptionText;
-    private int votedCount;
+public class PollCreateResponse {
+    private int pollSeq;
+    private String pollCategory;
+    private String pollDescription;
+    private List<PollOptionCreateResponse> pollOptions;
 }

@@ -1,17 +1,21 @@
 package world.startoy.polling.adapter.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.web.bind.annotation.*;
-import world.startoy.polling.usecase.UserService;
-import world.startoy.polling.usecase.VoteService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+
 import world.startoy.polling.usecase.dto.OptionVoteRateDTO;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import world.startoy.polling.usecase.UserService;
+import world.startoy.polling.usecase.VoteService;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -33,6 +37,7 @@ public class VoteController {
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+
     }
 
     // 투표율 조회
@@ -43,3 +48,4 @@ public class VoteController {
         return ResponseEntity.ok(voteRates);
     }
 }
+

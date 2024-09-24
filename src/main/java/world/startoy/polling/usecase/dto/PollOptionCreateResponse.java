@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PollOptionDTO {
-    private String pollOptionUid;
+public class PollOptionCreateResponse {
     private int pollOptionSeq;
     private String pollOptionText;
-    private int votedCount;
 }
