@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import world.startoy.polling.common.Uploadable;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +15,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "pl_poll_option")
-public class PollOption {
+public class PollOption implements Uploadable {
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public String getUploadableType() {
+        return "PollOption";
+    }
+
 
     @Id
     @NotNull
@@ -59,7 +71,4 @@ public class PollOption {
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
-
-    @Column(name = "vote_count", nullable = true)
-    private Integer voteCount;
 }
