@@ -3,6 +3,7 @@ package world.startoy.polling.usecase;
 import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.VoteRepository;
 import world.startoy.polling.domain.Poll;
@@ -13,6 +14,7 @@ import world.startoy.polling.usecase.dto.PollOptionResponse;
 import world.startoy.polling.usecase.dto.VoteCreateRequest;
 import world.startoy.polling.usecase.dto.VoteCreateResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -29,6 +31,7 @@ public class VoteService {
 
 
     // 투표
+    @Transactional
     public Vote submitVote(Long pollId, Long optionId, String voterIp) {
         if (hasVoted(pollId, voterIp)) {
             throw new IllegalStateException("이미 투표하셨습니다.");
@@ -36,10 +39,13 @@ public class VoteService {
 
         String voteUid = UUID.randomUUID().toString();
         Vote vote = new Vote();
+        vote.setId(1L);
         vote.setVoteUid(voteUid);
         vote.setPollId(pollId);
         vote.setOptionId(optionId);
         vote.setVoterIp(voterIp);
+        vote.setCreatedAt(LocalDateTime.now());
+
         return voteRepository.save(vote);
     }
 
