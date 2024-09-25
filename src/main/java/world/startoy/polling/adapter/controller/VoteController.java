@@ -4,17 +4,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-
-import world.startoy.polling.usecase.dto.OptionVoteRateDTO;
-
-import java.util.List;
-import java.util.Map;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import world.startoy.polling.usecase.UserService;
 import world.startoy.polling.usecase.VoteService;
+import world.startoy.polling.usecase.dto.VoteCreateRequest;
+import world.startoy.polling.usecase.dto.VoteCreateResponse;
 
 
 @RequiredArgsConstructor
@@ -37,15 +31,20 @@ public class VoteController {
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 
-    // 투표율 조회
-    @GetMapping("/rate")
-    @Operation(summary = "특정 투표의 옵션들 투표율 조회")
-    public ResponseEntity<List<OptionVoteRateDTO>> getVoteRate(@RequestParam Long pollId) {
-        List<OptionVoteRateDTO> voteRates = voteService.getVoteRates(pollId);
-        return ResponseEntity.ok(voteRates);
+    @PostMapping("uid")
+    public VoteCreateResponse createVote(@RequestBody VoteCreateRequest request, HttpServletRequest httpRequest) {
+        String voterIp = userService.getClientIp(httpRequest);
+        return voteService.createVote(request, voterIp);
     }
+
+//    // 투표율 조회
+//    @GetMapping("/rate")
+//    @Operation(summary = "특정 투표의 옵션들 투표율 조회")
+//    public ResponseEntity<List<OptionVoteRateDTO>> getVoteRate(@RequestParam Long pollId) {
+//        List<OptionVoteRateDTO> voteRates = voteService.getVoteRates(pollId);
+//        return ResponseEntity.ok(voteRates);
+//    }
 }
 
