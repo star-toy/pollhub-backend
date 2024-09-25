@@ -16,8 +16,7 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     List<Vote> findByPollId(Long pollId);
 
-
-
+    // 투표 옵션 및 득표수 가져오는 쿼리
     @Query("SELECT " +
             "o.pollOptionUid as pollOptionUid, " +
             "o.pollOptionText as pollOptionText, " +
