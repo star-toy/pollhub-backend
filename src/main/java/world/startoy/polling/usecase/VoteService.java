@@ -5,9 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.VoteRepository;
+import world.startoy.polling.domain.Poll;
+import world.startoy.polling.domain.PollOption;
 import world.startoy.polling.domain.Vote;
 import world.startoy.polling.usecase.dto.OptionVoteRateDTO;
 import world.startoy.polling.usecase.dto.PollOptionResponse;
+import world.startoy.polling.usecase.dto.VoteCreateRequest;
+import world.startoy.polling.usecase.dto.VoteCreateResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +25,7 @@ public class VoteService {
 
     private final VoteRepository voteRepository;
     private final PollOptionRepository pollOptionRepository; // PollOption 데이터를 가져오기 위한 Repository
+    private final PollService pollService;
 
 
     // 투표
@@ -38,12 +43,47 @@ public class VoteService {
         return voteRepository.save(vote);
     }
 
-
     // 투표 여부 확인
     public boolean hasVoted(Long pollId, String voterIp) {
         return !voteRepository.findByPollIdAndVoterIp(pollId, voterIp).isEmpty();
     }
 
+
+    // 투표(Vote) 저장 후 투표 정보 반환
+    public VoteCreateResponse createVote(VoteCreateRequest request, String voterIp) {
+
+        Poll poll = pollService.findByPollUid(request.getPollUid());
+
+        if(poll == null){
+            throw new IllegalStateException("존재하지 않는 pollUid입니다.");
+        }
+
+        if (hasVoted(poll.getId(), voterIp)) {
+            throw new IllegalStateException("이미 투표하셨습니다.");
+        }
+
+        PollOption selectedOption = pollOptionRepository.findByPollOptionUid(request.getSelectedPollOptionUid())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid poll option UID"));
+
+        String voteUid = UUID.randomUUID().toString();
+        Vote vote = Vote.builder()
+                .voteUid(voteUid)
+                .pollId(poll.getId())
+                .optionId(selectedOption.getId())
+                .voterIp(voterIp)
+                .build();
+        voteRepository.save(vote);
+
+        // 옵션 정보 및 각 옵션의 득표수 가져오기
+        List<PollOptionResponse> pollOptions = getVoteCountByPollId(poll.getId());
+
+        return VoteCreateResponse.builder()
+                .voteUid(vote.getVoteUid())
+                .pollUid(poll.getPollUid())
+                .votedPollOptionUid(selectedOption.getPollOptionUid())
+                .pollOptions(pollOptions)
+                .build();
+    }
 
     // 투표율 조회
     public List<OptionVoteRateDTO> getVoteRates(Long pollId) {
@@ -79,8 +119,7 @@ public class VoteService {
                 .collect(Collectors.toList());
     }
 
-
-
+    // pollId로 옵션 정보 및 옵션별 득표수 가져오기
     public List<PollOptionResponse> getVoteCountByPollId(Long pollId) {
         List<Tuple> pollOptions = voteRepository.countVotesByPollId(pollId);
         return pollOptions.stream()
