@@ -3,6 +3,7 @@ package world.startoy.polling.adapter.controller;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import world.startoy.polling.common.Uploadable;
+import world.startoy.polling.config.CloudFrontConfig;
 import world.startoy.polling.usecase.FileStorageService;
 import world.startoy.polling.usecase.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +25,7 @@ public class FileStorageController {
 
     private final FileStorageService fileStorageService;
     private final UserService userService;
+    private final CloudFrontConfig cloudFrontConfig;
 
 
 
@@ -86,6 +88,11 @@ public class FileStorageController {
     public ResponseEntity<FileStorageDTO> getFileByUid(@PathVariable String fileUid) {
         try {
             FileStorageDTO fileStorageDto = fileStorageService.getFileDtoByUid(fileUid);
+
+            // CloudFront URL 추가
+            String fullUrl = cloudFrontConfig.getCloudfrontUrl() + "/" + fileStorageDto.getFileFullName();
+            fileStorageDto.setFileUrl(fullUrl); // FileStorageDTO에 setFileUrl 메서드 추가 필요
+
             return ResponseEntity.ok(fileStorageDto); // 200 OK, FileStorageDTO 반환
         } catch (IllegalArgumentException e) {
             // 잘못된 UID 요청 (클라이언트 오류)
