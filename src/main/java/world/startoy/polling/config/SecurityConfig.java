@@ -33,7 +33,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .requiresChannel(channel -> channel
-                        .anyRequest().requiresSecure()) // HTTPS 강제
+                        //.anyRequest().requiresSecure()) // HTTPS 강제
+                .anyRequest().requiresInsecure()) // HTTP 허용             
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults()); // CORS 설정 추가
