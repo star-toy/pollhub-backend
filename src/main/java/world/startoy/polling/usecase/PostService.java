@@ -37,24 +37,17 @@ public class PostService {
         return postRepository.findAll();
     }
 
-
     // 모든 게시글 조회 (홈화면 보여질 부분)
-
-    public List<PostDTO> findAllPostsList (List<Post> postsList) {
-
-        List<PostDTO> postDTOList = new ArrayList<>();
-
-        for (Post post : postsList) {
-            PostDTO postDTO = PostDTO.builder()
-                    .postUid(post.getPostUid())
-                    .title(post.getTitle())
-                    .createdBy(post.getCreatedBy())
-                    .createdAt(post.getCreatedAt())
-                    .build();
-            postDTOList.add(postDTO);
-        }
-
-        return postDTOList;
+    public PostListResponse getPostListResponse(List<Post> postsList) {
+        List<PostDTO> postDTOList = postsList.stream()
+                .map(post -> PostDTO.builder()
+                        .postUid(post.getPostUid())
+                        .title(post.getTitle())
+                        .createdBy(post.getCreatedBy())
+                        .createdAt(post.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+        return new PostListResponse(postDTOList);
     }
 
 

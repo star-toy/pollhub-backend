@@ -42,29 +42,19 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    // 모든 게시글 조회 (홈화면에 보여질 게시글 전체 list)
+    // 게시글 전체 조회 - 메인페이지 게시글 목록
     @GetMapping("/list")
     @Operation(summary = "모든 게시글 조회")
-    //public ResponseEntity<List<PostDTO>> findAllPostsList() {
     public ResponseEntity<PostListResponse> findAllPostsList() {
-        List<Post> postsList = postService.findAllPosts(); // Optional 로 진행시 단일 Post 객체에 대한 결과를 반환하게되어 List사용
+        // 게시글 전체 목록
+        List<Post> postsList = postService.findAllPosts();
 
-        // 포스트 리스트가 비어있을 경우 빈 PostListResponse 반환
-        if (postsList.isEmpty()) {
-            return ResponseEntity.ok(new PostListResponse(Collections.emptyList()));
-        }
-
-        // PostDTO 리스트 생성
-        List<PostDTO> postDTOs = postService.findAllPostsList(postsList); // 여기서 PostDTO 리스트 생성
-
-        // PostListResponse 객체 생성
-        PostListResponse postListResponse = new PostListResponse(postDTOs);
+        // PostListResponse 객체 생성 및 반환
+        PostListResponse postListResponse = postService.getPostListResponse(postsList);
         return ResponseEntity.ok(postListResponse);
-
     }
 
-
-
+    
     //  특정 ID의 게시글을 조회
     @GetMapping("/{postId}")
     @Operation(summary = "게시글 상세 조회")
