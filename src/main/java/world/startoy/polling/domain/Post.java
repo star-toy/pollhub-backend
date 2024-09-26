@@ -2,7 +2,10 @@ package world.startoy.polling.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import world.startoy.polling.common.Uploadable;
 
 import java.time.LocalDateTime;
@@ -39,8 +42,9 @@ public class Post implements Uploadable {
     @Column(name = "title", nullable = false, length = 200)
     private String title;
 
-    @Column(name = "file_id", length = 36)
-    private String fileId;
+    @ManyToOne
+    @JoinColumn(name = "file_id", referencedColumnName = "file_id", insertable = false, updatable = false)
+    private FileStorage file;
 
     @NotNull
     @Column(name = "is_deleted", nullable = false)
