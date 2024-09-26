@@ -14,7 +14,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "https://polling.world", "https://api.polling.world", "https://localhost/*") // 추가된 도메인
+                .allowedOrigins("http://localhost:3000", "https://polling.world", "https://api.polling.world") // 추가된 도메인
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
