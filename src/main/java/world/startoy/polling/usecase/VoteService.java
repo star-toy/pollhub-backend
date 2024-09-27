@@ -77,6 +77,7 @@ public class VoteService {
                 .pollId(poll.getId())
                 .optionId(selectedOption.getId())
                 .voterIp(voterIp)
+                .createdAt(LocalDateTime.now())
                 .build();
         voteRepository.save(vote);
 
