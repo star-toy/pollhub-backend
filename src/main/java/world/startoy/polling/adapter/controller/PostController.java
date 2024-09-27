@@ -1,20 +1,25 @@
 package world.startoy.polling.adapter.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
-import world.startoy.polling.domain.Post;
-import world.startoy.polling.usecase.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import world.startoy.polling.domain.Post;
+import world.startoy.polling.usecase.PostService;
 import world.startoy.polling.usecase.UserService;
-import world.startoy.polling.usecase.dto.*;
+import world.startoy.polling.usecase.dto.PostCreateRequest;
+import world.startoy.polling.usecase.dto.PostCreateResponse;
+import world.startoy.polling.usecase.dto.PostDetailResponse;
+import world.startoy.polling.usecase.dto.PostListResponse;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,29 +47,16 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    // 모든 게시글 조회 (홈화면에 보여질 게시글 전체 list)
+    // 게시글 전체 조회 - 메인페이지 게시글 목록
     @GetMapping("/list")
     @Operation(summary = "모든 게시글 조회")
-    //public ResponseEntity<List<PostDTO>> findAllPostsList() {
     public ResponseEntity<PostListResponse> findAllPostsList() {
-        List<Post> postsList = postService.findAllPosts(); // Optional 로 진행시 단일 Post 객체에 대한 결과를 반환하게되어 List사용
-
-        // 포스트 리스트가 비어있을 경우 빈 PostListResponse 반환
-        if (postsList.isEmpty()) {
-            return ResponseEntity.ok(new PostListResponse(Collections.emptyList()));
-        }
-
-        // PostDTO 리스트 생성
-        List<PostDTO> postDTOs = postService.findAllPostsList(postsList); // 여기서 PostDTO 리스트 생성
-
-        // PostListResponse 객체 생성
-        PostListResponse postListResponse = new PostListResponse(postDTOs);
+        // PostListResponse 객체 생성 및 반환
+        PostListResponse postListResponse = postService.getPostListResponse();
         return ResponseEntity.ok(postListResponse);
-
     }
 
-
-
+    
     //  특정 ID의 게시글을 조회
     @GetMapping("/{postId}")
     @Operation(summary = "게시글 상세 조회")

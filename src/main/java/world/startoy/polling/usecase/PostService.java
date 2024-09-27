@@ -14,7 +14,6 @@ import world.startoy.polling.domain.Post;
 import world.startoy.polling.usecase.dto.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,22 +38,9 @@ public class PostService {
 
 
     // 모든 게시글 조회 (홈화면 보여질 부분)
-
-    public List<PostDTO> findAllPostsList (List<Post> postsList) {
-
-        List<PostDTO> postDTOList = new ArrayList<>();
-
-        for (Post post : postsList) {
-            PostDTO postDTO = PostDTO.builder()
-                    .postUid(post.getPostUid())
-                    .title(post.getTitle())
-                    .createdBy(post.getCreatedBy())
-                    .createdAt(post.getCreatedAt())
-                    .build();
-            postDTOList.add(postDTO);
-        }
-
-        return postDTOList;
+    public PostListResponse getPostListResponse() {
+        List<PostDTO> postDTOList = postRepository.findAllPostWithFile();
+        return new PostListResponse(postDTOList);
     }
 
 
