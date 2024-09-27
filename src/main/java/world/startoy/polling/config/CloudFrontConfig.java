@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CloudFrontConfig {
 
+
     String cloudfrontUrl = System.getenv("CLOUDFRONT_URL");
     
     public String getCloudfrontUrl() {
