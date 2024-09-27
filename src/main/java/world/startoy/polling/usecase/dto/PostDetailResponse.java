@@ -15,6 +15,8 @@ import java.util.List;
 public class PostDetailResponse {
     private String postUid;
     private String title;
+    private String fileUid;
+    private String fileFullName;
     private List<PollDetailResponse> polls;
     private LocalDateTime createdAt;
     private String createdBy;

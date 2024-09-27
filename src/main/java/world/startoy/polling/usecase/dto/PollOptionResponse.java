@@ -13,5 +13,7 @@ public class PollOptionResponse {
     private String pollOptionUid;
     private int pollOptionSeq;
     private String pollOptionText;
+    private String fileUid;
+    private String fileFullName;
     private int votedCount; // 득표수
 }
