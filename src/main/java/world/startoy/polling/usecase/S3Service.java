@@ -18,8 +18,10 @@ public class S3Service {
     private final AmazonS3 amazonS3;
 
 
+
     public String uploadFile(MultipartFile multipartFile, String fileName) throws IOException {
         try {
+
 
             String bucket = System.getenv("AWS_S3_BUCKET");
             ObjectMetadata objectMetadata = new ObjectMetadata();

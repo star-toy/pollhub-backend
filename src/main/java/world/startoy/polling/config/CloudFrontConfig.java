@@ -8,7 +8,7 @@ public class CloudFrontConfig {
 
 
     String cloudfrontUrl = System.getenv("CLOUDFRONT_URL");
-
+    
     public String getCloudfrontUrl() {
         return cloudfrontUrl;
     }
