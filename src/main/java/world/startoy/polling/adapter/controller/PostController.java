@@ -1,20 +1,25 @@
 package world.startoy.polling.adapter.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
-import world.startoy.polling.domain.Post;
-import world.startoy.polling.usecase.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import world.startoy.polling.domain.Post;
+import world.startoy.polling.usecase.PostService;
 import world.startoy.polling.usecase.UserService;
-import world.startoy.polling.usecase.dto.*;
+import world.startoy.polling.usecase.dto.PostCreateRequest;
+import world.startoy.polling.usecase.dto.PostCreateResponse;
+import world.startoy.polling.usecase.dto.PostDetailResponse;
+import world.startoy.polling.usecase.dto.PostListResponse;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -46,11 +51,8 @@ public class PostController {
     @GetMapping("/list")
     @Operation(summary = "모든 게시글 조회")
     public ResponseEntity<PostListResponse> findAllPostsList() {
-        // 게시글 전체 목록
-        List<Post> postsList = postService.findAllPosts();
-
         // PostListResponse 객체 생성 및 반환
-        PostListResponse postListResponse = postService.getPostListResponse(postsList);
+        PostListResponse postListResponse = postService.getPostListResponse();
         return ResponseEntity.ok(postListResponse);
     }
 
