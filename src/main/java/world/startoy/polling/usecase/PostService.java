@@ -14,7 +14,6 @@ import world.startoy.polling.domain.Post;
 import world.startoy.polling.usecase.dto.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,6 +42,8 @@ public class PostService {
                 .map(post -> PostDTO.builder()
                         .postUid(post.getPostUid())
                         .title(post.getTitle())
+                        .fileUid(post.getFile() != null ? post.getFile().getFileUid() : null)
+                        .fileFullName(post.getFile() != null ? post.getFile().getFileFullName() : null)
                         .createdBy(post.getCreatedBy())
                         .createdAt(post.getCreatedAt())
                         .build())
