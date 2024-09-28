@@ -5,10 +5,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import world.startoy.polling.adapter.repository.FileStorageRepository;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.PollRepository;
 import world.startoy.polling.adapter.repository.PostRepository;
 import world.startoy.polling.config.CloudFrontConfig;
+import world.startoy.polling.domain.FileStorage;
 import world.startoy.polling.domain.Poll;
 import world.startoy.polling.domain.PollOption;
 import world.startoy.polling.domain.Post;
@@ -32,6 +34,7 @@ public class PostService {
     private final VoteService voteService;
     private final FileStorageService fileStorageService;
     private final CloudFrontConfig cloudFrontConfig;
+    private final FileStorageRepository fileStorageRepository;
 
 
     // 게시글 전체 가져오기
@@ -68,8 +71,6 @@ public class PostService {
     }
 
     private PostDetailResponse createPostDetailResponse(Post post) {
-        String cloudfrontUrl = cloudFrontConfig.getCloudfrontUrl(); // cloudfront url
-
 
         return PostDetailResponse.builder()
                 .postUid(post.getPostUid())
@@ -77,7 +78,6 @@ public class PostService {
                 .createdAt(post.getCreatedAt())
                 .createdBy(post.getCreatedBy())
                 .polls(convertToPollDetailResponses(post.getPolls()))
-                .imageUrl(cloudfrontUrl+post.getFileFullName())
                 .build();
     }
 
@@ -181,14 +181,26 @@ public class PostService {
 
     public PostCreateResponse createPost(PostCreateRequest request, String createdBy) {
         String newPostUid = UUID.randomUUID().toString();
+
+        FileStorage postFile = FileStorage.builder()
+                .fileUid(request.getFileUid())
+                .fileFullName(request.getFileName())
+                .isDeleted(false) // 기본값 설정
+                .createdAt(LocalDateTime.now())
+                .createdBy(createdBy)
+                .fileLinkedUid(newPostUid)
+                .uploadableType("Post")
+                .build();
+
+        FileStorage savedPostFile = fileStorageRepository.save(postFile);
+
         Post post = Post.builder()
                 .postUid(newPostUid)
                 .title(request.getTitle())
                 .createdAt(LocalDateTime.now())
                 .createdBy(createdBy)
                 .isDeleted(false) // 기본값 설정
-                .fileUid(request.getFileUid())
-                .fileFullName(request.getFileName())
+                .file(savedPostFile)
                 .build();
 
         Post savedPost = postRepository.save(post);
@@ -211,6 +223,18 @@ public class PostService {
             for (PollOptionCreateRequest optionReq : pollReq.getPollOptions()) {
                 String newPollOptionUid = UUID.randomUUID().toString();
 
+                FileStorage pollOptionFile = FileStorage.builder()
+                        .fileUid(optionReq.getFileUid())
+                        .fileFullName(optionReq.getFileName())
+                        .isDeleted(false) // 기본값 설정
+                        .createdAt(LocalDateTime.now())
+                        .createdBy(createdBy)
+                        .fileLinkedUid(newPostUid)
+                        .uploadableType("PollOption")
+                        .build();
+
+                FileStorage savedPollOptionFile = fileStorageRepository.save(pollOptionFile);
+
                 PollOption pollOption = PollOption.builder()
                         .pollOptionUid(newPollOptionUid)
                         .poll(savedPoll) // 관계 설정
@@ -219,8 +243,7 @@ public class PostService {
                         .isDeleted(false) // 기본값 설정
                         .createdAt(LocalDateTime.now())
                         .createdBy(createdBy)
-                        .fileUid(request.getFileUid())
-                        .fileFullName(request.getFileName())
+                        .file(savedPollOptionFile)
                         .build();
 
                 pollOptionRepository.save(pollOption);
@@ -231,5 +254,4 @@ public class PostService {
                 .postUid(savedPost.getPostUid())
                 .build();
     }
-
 }
