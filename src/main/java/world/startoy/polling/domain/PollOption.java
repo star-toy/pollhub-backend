@@ -28,7 +28,6 @@ public class PollOption implements Uploadable {
         return "PollOption";
     }
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "poll_option_id", nullable = false)
@@ -51,8 +50,9 @@ public class PollOption implements Uploadable {
     @Column(name = "poll_option_text", length = 255)
     private String pollOptionText;
 
-    @Column(name = "file_id", length = 36)
-    private String fileId;
+    @ManyToOne
+    @JoinColumn(name = "file_id", referencedColumnName = "file_id", insertable = false, updatable = false)
+    private FileStorage file;
 
     @NotNull
     @Column(name = "is_deleted", nullable = false)
@@ -70,6 +70,4 @@ public class PollOption implements Uploadable {
 
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
-
-
 }

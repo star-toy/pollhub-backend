@@ -13,4 +13,8 @@ public class PollOptionCreateRequest {
     private int pollOptionSeq;
     @NotNull
     private String pollOptionText;
+
+    //테스트
+    private String fileUid;
+    private String fileName;
 }

@@ -16,6 +16,7 @@ import world.startoy.polling.usecase.dto.FileStorageDTO;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,59 +27,37 @@ public class FileStorageController {
     private final FileStorageService fileStorageService;
     private final UserService userService;
     private final CloudFrontConfig cloudFrontConfig;
+    private  FileStorageDTO fileStorageDTO;
 
 
 
-    @PostMapping(value ="/upload" ,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> uploadFile(
-            @RequestPart("file") MultipartFile file,
-            @RequestParam("uploadableType") String uploadableType,
-            @RequestParam("fileLinkedUid") String fileLinkedUid,
-            HttpServletRequest request) {
 
-        Map<String, String> response = new HashMap<>();
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<FileStorageDTO> uploadFile(
+            @RequestPart("file") MultipartFile file) {
 
-        try{
+        try {
             // 파일 유효성 검사
             if (file == null || file.isEmpty()) {
-                response.put("message", "File must not be null or empty");
-                return ResponseEntity.badRequest().body(response); // 400 Bad Request
+                throw new IllegalArgumentException("File must not be null or empty");
             }
 
-            String uploaderIp = userService.getClientIp(request);
+            // FileStorageService의 saveFile 메서드 호출하여 파일 S3 업로드
+            FileStorageDTO fileStorageDTO = fileStorageService.saveFile(file);
 
-            // Uploadable 객체 생성 (Post 객체 예시)
-            Uploadable uploadable;
-            if ("Post".equals(uploadableType)) {
-                uploadable = fileStorageService.getPostById(fileLinkedUid); // 서비스 호출
-            } else if ("PollOption".equals(uploadableType)) {
-                uploadable = fileStorageService.getPollOptionByUid(fileLinkedUid); // 서비스 호출
-            } else {
-                throw new IllegalArgumentException("Invalid uploadable type");
-            }
-
-
-            // 파일 저장
-            fileStorageService.saveFile(file, uploadable, uploaderIp);
-
-            // 정상 동작 완료
-            response.put("message", "File uploaded successfully");
-            return ResponseEntity.ok(response); // 200 OK
+            // FileStorageDTO 반환
+            return ResponseEntity.ok(fileStorageDTO);
 
         } catch (IllegalArgumentException e) {
-            // 잘못된 파일 형식 등 클라이언트 문제
+            // 클라이언트 오류 처리
+            Map<String, String> response = new HashMap<>();
             response.put("message", e.getMessage());
-            return ResponseEntity.badRequest().body(response); // 400 Bad Request
-
-        } catch (IOException e) {
-            // 파일 저장 중 발생한 IO 오류 (서버 문제)
-            response.put("message", "Failed to store file due to server error");
-            return ResponseEntity.status(500).body(response); // 500 Internal Server Error
-
+            return ResponseEntity.badRequest().body(null); // FileStorageDTO 대신 null 반환
         } catch (Exception e) {
-            // 기타 예상하지 못한 서버 오류
-            response.put("message", "An unexpected error occurred while uploading the file");
-            return ResponseEntity.status(500).body(response); // 500 Internal Server Error
+            // 기타 서버 오류 처리
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "An error occurred while uploading the file");
+            return ResponseEntity.status(500).body(null); // FileStorageDTO 대신 null 반환
         }
     }
 
@@ -88,10 +67,6 @@ public class FileStorageController {
     public ResponseEntity<FileStorageDTO> getFileByUid(@PathVariable String fileUid) {
         try {
             FileStorageDTO fileStorageDto = fileStorageService.getFileDtoByUid(fileUid);
-
-            // CloudFront URL 추가
-            String fullUrl = cloudFrontConfig.getCloudfrontUrl() + "/" + fileStorageDto.getFileFullName();
-            fileStorageDto.setFileUrl(fullUrl); // FileStorageDTO에 setFileUrl 메서드 추가 필요
 
             return ResponseEntity.ok(fileStorageDto); // 200 OK, FileStorageDTO 반환
         } catch (IllegalArgumentException e) {

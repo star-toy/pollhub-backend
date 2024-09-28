@@ -14,4 +14,5 @@ public class PollOptionResponse {
     private int pollOptionSeq;
     private String pollOptionText;
     private int votedCount; // 득표수
+    private String imageUrl;
 }
