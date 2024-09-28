@@ -66,4 +66,13 @@ public class Post implements Uploadable {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Poll> polls;
 
+    // 테스트
+    @NotNull
+    @Column(name = "file_uid", unique = true, nullable = false, length = 36)
+    private String fileUid;
+
+    @NotNull
+    @Column(name = "file_full_name", nullable = false, length = 255)
+    private String fileFullName;
+
 }

@@ -72,4 +72,13 @@ public class PollOption implements Uploadable {
     private String updatedBy;
 
 
+    // 테스트
+    @NotNull
+    @Column(name = "file_uid", unique = true, nullable = false, length = 36)
+    private String fileUid;
+
+    @NotNull
+    @Column(name = "file_full_name", nullable = false, length = 255)
+    private String fileFullName;
+
 }

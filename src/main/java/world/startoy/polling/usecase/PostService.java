@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.PollRepository;
 import world.startoy.polling.adapter.repository.PostRepository;
+import world.startoy.polling.config.CloudFrontConfig;
 import world.startoy.polling.domain.Poll;
 import world.startoy.polling.domain.PollOption;
 import world.startoy.polling.domain.Post;
@@ -29,6 +30,8 @@ public class PostService {
     private final PollOptionRepository pollOptionRepository;
     private final PollService pollService;
     private final VoteService voteService;
+    private final FileStorageService fileStorageService;
+    private final CloudFrontConfig cloudFrontConfig;
 
 
     // 게시글 전체 가져오기
@@ -65,12 +68,16 @@ public class PostService {
     }
 
     private PostDetailResponse createPostDetailResponse(Post post) {
+        String cloudfrontUrl = cloudFrontConfig.getCloudfrontUrl(); // cloudfront url
+
+
         return PostDetailResponse.builder()
                 .postUid(post.getPostUid())
                 .title(post.getTitle())
                 .createdAt(post.getCreatedAt())
                 .createdBy(post.getCreatedBy())
                 .polls(convertToPollDetailResponses(post.getPolls()))
+                .imageUrl(cloudfrontUrl+post.getFileFullName())
                 .build();
     }
 
@@ -180,6 +187,8 @@ public class PostService {
                 .createdAt(LocalDateTime.now())
                 .createdBy(createdBy)
                 .isDeleted(false) // 기본값 설정
+                .fileUid(request.getFileUid())
+                .fileFullName(request.getFileName())
                 .build();
 
         Post savedPost = postRepository.save(post);
@@ -210,6 +219,8 @@ public class PostService {
                         .isDeleted(false) // 기본값 설정
                         .createdAt(LocalDateTime.now())
                         .createdBy(createdBy)
+                        .fileUid(request.getFileUid())
+                        .fileFullName(request.getFileName())
                         .build();
 
                 pollOptionRepository.save(pollOption);
