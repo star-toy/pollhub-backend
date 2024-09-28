@@ -38,4 +38,4 @@ out/
 
 
 ### application-private.properties ###
-application-private.properties
+application-*.properties
