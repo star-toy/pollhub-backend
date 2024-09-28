@@ -24,9 +24,10 @@ public class FileStorageService {
     private final FileStorageRepository fileStorageRepository;
     private final S3Service s3Service;
 
-    // 파일 업로드
+
+    // 파일 S3 업로드
     @Transactional
-    public FileStorage saveFile(MultipartFile file, Uploadable uploadable, String uploaderIp) throws IOException {
+    public FileStorageDTO saveFile(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File must not be null or empty");
         }
@@ -55,22 +56,11 @@ public class FileStorageService {
             String fileUrl = s3Service.uploadFile(file, fileFullName);
             System.out.println("fileUrl : " + fileUrl);
 
-            // FileStorage 엔티티 생성 및 저장
-            FileStorage fileStorage = FileStorage.builder()
-                    .fileUid(fileUid)                     // 파일 UUID
-                    .fileFullName(fileFullName)           // 전체 파일명 (파일명 + UUID + 확장자)
-                    .isDeleted(false)                     // 삭제 여부
-                    .createdAt(LocalDateTime.now())       // 생성일자
-                    .createdBy(uploaderIp)                // 생성자 IP
-                    .fileLinkedUid(uploadable.getLinkedUid()) // 연관된 엔티티 UID 설정
-                    .uploadableType(uploadable.getUploadableType()) // 연관된 엔티티 타입 설정
+            // FileStorageDTO 생성 및 반환
+            return  FileStorageDTO.builder()
+                    .fileUid(fileUid)
+                    .fileFullName(fileFullName)
                     .build();
-
-            // DB에 저장
-            FileStorage savedFileStorage = fileStorageRepository.save(fileStorage);
-            System.out.println("FileStorage after save: " + savedFileStorage);
-
-            return savedFileStorage;
 
         } catch (FileValidationException e) {
             throw e;
@@ -82,6 +72,8 @@ public class FileStorageService {
             throw new FileStorageException("An unexpected error occurred while processing the file", e);
         }
     }
+
+
 
     // Post 객체를 ID로 조회하는 메서드 (구현)
     public Uploadable getPostById(String fileLinkedUid) {
@@ -137,5 +129,17 @@ public class FileStorageService {
                 .build();
     }
 
+
+    // S3에 파일을 업로드하고 파일의 UID와 이름을 반환하는 메서드
+    public String uploadFileToS3(MultipartFile file, String fileUid) throws IOException {
+        // 파일 이름을 고유하게 생성
+        String fileName = fileUid + "_" + file.getOriginalFilename();
+
+        // S3에 파일 업로드
+        String fileUrl = s3Service.uploadFile(file, fileName); // S3에 업로드
+
+        System.out.println("fileUrl : " + fileUrl);
+        return fileUrl; // 업로드된 파일 URL 반환
+    }
 
 }
