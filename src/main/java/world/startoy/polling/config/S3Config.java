@@ -12,12 +12,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class S3Config {
 
+    @Value("${AWS_ACCESS_KEY:#{null}}")
+    private String accessKey;
+
+    @Value("${AWS_SECRET_KEY:#{null}}")
+    private String secretKey;
+
+    @Value("${AWS_REGION:#{null}}")
+    private String region;
+
+    
     @Bean
     public AmazonS3 amazonS3() {
 
-        String accessKey = System.getenv("AWS_ACCESS_KEY");
-        String secretKey = System.getenv("AWS_SECRET_KEY");
-        String region = System.getenv("AWS_REGION");
+        // String accessKey = System.getenv("AWS_ACCESS_KEY");
+        // String secretKey = System.getenv("AWS_SECRET_KEY");
+        // String region = System.getenv("AWS_REGION");
         
 
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
