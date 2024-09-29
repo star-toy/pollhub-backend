@@ -43,7 +43,7 @@ public class Post implements Uploadable {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "file_id", referencedColumnName = "file_id", insertable = false, updatable = false)
+    @JoinColumn(name = "file_id", referencedColumnName = "file_id")
     private FileStorage file;
 
     @NotNull
