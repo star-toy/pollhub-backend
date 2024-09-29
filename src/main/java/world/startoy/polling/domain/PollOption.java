@@ -51,7 +51,7 @@ public class PollOption implements Uploadable {
     private String pollOptionText;
 
     @ManyToOne
-    @JoinColumn(name = "file_id", referencedColumnName = "file_id", insertable = false, updatable = false)
+    @JoinColumn(name = "file_id", referencedColumnName = "file_id")
     private FileStorage file;
 
     @NotNull
