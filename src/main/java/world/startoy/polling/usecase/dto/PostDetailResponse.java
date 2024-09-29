@@ -18,5 +18,5 @@ public class PostDetailResponse {
     private List<PollDetailResponse> polls;
     private LocalDateTime createdAt;
     private String createdBy;
-    private String imageUrl;
+
 }
