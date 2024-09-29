@@ -179,6 +179,7 @@ public class PostService {
     }
 
 
+    @Transactional
     public PostCreateResponse createPost(PostCreateRequest request, String createdBy) {
         String newPostUid = UUID.randomUUID().toString();
 
