@@ -18,14 +18,14 @@ public class S3Config {
         String accessKey = System.getenv("AWS_ACCESS_KEY");
         String secretKey = System.getenv("AWS_SECRET_KEY");
         String region = System.getenv("AWS_REGION");
-        
 
-        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 
-        return AmazonS3ClientBuilder
-                .standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(region)
-                .build();
+            AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+
+            return AmazonS3ClientBuilder
+                    .standard()
+                    .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                    .withRegion(region)
+                    .build();
+        }
     }
-}
