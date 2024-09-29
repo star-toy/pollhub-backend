@@ -11,31 +11,30 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class S3Config {
+    private static final Logger logger = LoggerFactory.getLogger(S3Config.class);
 
-    @Value("${AWS_ACCESS_KEY:#{null}}")
-    private String accessKey;
-
-    @Value("${AWS_SECRET_KEY:#{null}}")
-    private String secretKey;
-
-    @Value("${AWS_REGION:#{null}}")
-    private String region;
-
-    
+    @Lazy
     @Bean
     public AmazonS3 amazonS3() {
+        String accessKey = System.getenv("AWS_ACCESS_KEY");
+        String secretKey = System.getenv("AWS_SECRET_KEY");
+        String region = System.getenv("AWS_REGION");
 
-        // String accessKey = System.getenv("AWS_ACCESS_KEY");
-        // String secretKey = System.getenv("AWS_SECRET_KEY");
-        // String region = System.getenv("AWS_REGION");
-        
+        if (accessKey == null || secretKey == null || region == null) {
+            logger.error("AWS credentials or region are not set. Please check your environment variables.");
+            throw new IllegalStateException("AWS credentials or region are not properly configured");
+        }
 
-        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-
-        return AmazonS3ClientBuilder
-                .standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(region)
-                .build();
+        try {
+            AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+            return AmazonS3ClientBuilder
+                    .standard()
+                    .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                    .withRegion(region)
+                    .build();
+        } catch (Exception e) {
+            logger.error("Failed to create AmazonS3 client", e);
+            throw new RuntimeException("Failed to create AmazonS3 client", e);
+        }
     }
 }
