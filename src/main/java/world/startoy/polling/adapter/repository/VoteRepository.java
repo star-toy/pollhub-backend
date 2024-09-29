@@ -21,13 +21,16 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
             "o.pollOptionUid as pollOptionUid, " +
             "o.pollOptionText as pollOptionText, " +
             "o.pollOptionSeq as pollOptionSeq, " +
+            "f.fileUid as fileUid, " +
+            "f.fileFullName as fileFullName, " +
             "COUNT(v.id) as votedCount " +
             "FROM Vote v " +
-            "JOIN PollOption o " +
-            "ON v.optionId = o.id " +
+            "JOIN PollOption o ON v.optionId = o.id " +
+            "LEFT JOIN FileStorage f ON o.file.id = f.id " +  // FileStorage와 JOIN
             "WHERE v.pollId = :pollId " +
-            "GROUP BY o.pollOptionUid, o.pollOptionText, o.pollOptionSeq")
+            "GROUP BY o.pollOptionUid, o.pollOptionText, o.pollOptionSeq, f.fileUid, f.fileFullName")
     List<Tuple> countVotesByPollId(@Param("pollId") Long pollId);
+
 
 }
 

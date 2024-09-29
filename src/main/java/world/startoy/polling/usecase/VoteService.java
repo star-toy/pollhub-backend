@@ -128,15 +128,16 @@ public class VoteService {
 
     // pollId로 옵션 정보 및 옵션별 득표수 가져오기
     public List<PollOptionResponse> getVoteCountByPollId(Long pollId) {
-        List<Tuple> pollOptions = voteRepository.countVotesByPollId(pollId);
-        return pollOptions.stream()
-                .map(tuple -> new PollOptionResponse(
-                        tuple.get("pollOptionUid", String.class),
-                        tuple.get("pollOptionSeq", Integer.class),  // int -> Integer.class로 수정
-                        tuple.get("pollOptionText", String.class),
-                        tuple.get("votedCount", Long.class).intValue()// Long으로 가져온 후 int로 변환
-                        //tuple.get("imageUrl", String.class)
-                ))
+        List<Tuple> results = voteRepository.countVotesByPollId(pollId);
+        return results.stream()
+                .map(tuple -> PollOptionResponse.builder()
+                        .pollOptionUid(tuple.get("pollOptionUid", String.class))
+                        .pollOptionSeq(tuple.get("pollOptionSeq", Integer.class))
+                        .pollOptionText(tuple.get("pollOptionText", String.class))
+                        .votedCount(tuple.get("votedCount", Long.class).intValue()) // Long을 int로 변환
+                        .fileUid(tuple.get("fileUid", String.class))
+                        .fileFullName(tuple.get("fileFullName", String.class))
+                        .build())
                 .collect(Collectors.toList());
     }
 }
