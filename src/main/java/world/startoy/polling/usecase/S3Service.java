@@ -17,15 +17,15 @@ public class S3Service {
 
     private final AmazonS3 amazonS3;
 
-    @Value("${AWS_S3_BUCKET:#{null}}")
-    private String bucket;
+    //@Value("${AWS_S3_BUCKET:#{null}}")
+    //private String bucket;
 
 
     public String uploadFile(MultipartFile multipartFile, String fileName) throws IOException {
         try {
 
 
-            //String bucket = System.getenv("AWS_S3_BUCKET");
+            String bucket = System.getenv("AWS_S3_BUCKET");
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(multipartFile.getSize());
             objectMetadata.setContentType(multipartFile.getContentType());
