@@ -16,7 +16,9 @@ public class PostDetailResponse {
     private String postUid;
     private String title;
     private List<PollDetailResponse> polls;
-    private LocalDateTime createdAt;
-    private String createdBy;
+    private String fileUid;
+    private String fileFullName;
+    private String createdBy;       // Post.createdBy
+    private LocalDateTime createdAt;// Post.createdAt
 
 }
