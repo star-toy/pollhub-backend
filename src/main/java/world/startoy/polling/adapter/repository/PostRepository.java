@@ -1,11 +1,9 @@
 package world.startoy.polling.adapter.repository;
 
-import jakarta.persistence.Tuple;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.Query;
-import world.startoy.polling.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import world.startoy.polling.domain.Post;
 import world.startoy.polling.usecase.dto.PostDTO;
 
 import java.util.List;
