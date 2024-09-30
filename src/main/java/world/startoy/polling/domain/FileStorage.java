@@ -2,7 +2,11 @@ package world.startoy.polling.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,9 +27,8 @@ public class FileStorage {
     private String fileUid;
 
     @NotNull
-    @Column(name = "file_full_name", nullable = false, length = 255)
-    private String fileFullName;
-
+    @Column(name = "file_name", nullable = false, length = 255)
+    private String fileName;
 
     @NotNull
     @Column(name = "is_deleted", nullable = false)
@@ -38,7 +41,6 @@ public class FileStorage {
     @NotNull
     @Column(name = "created_by", nullable = false, length = 20)
     private String createdBy;
-
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
@@ -53,6 +55,5 @@ public class FileStorage {
     // 업로드 가능한 엔티티의 타입 (Post, PollOption 등)
     @Column(name = "uploadable_type")
     private String uploadableType;
-
 
 }

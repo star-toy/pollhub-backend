@@ -23,12 +23,12 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
             "o.pollOptionText, " +
             "COUNT(v.id), " +
             "COALESCE(f.fileUid, ''), " +  // null이면 빈 문자열로 대체
-            "COALESCE(f.fileFullName, '')) " +  // null이면 빈 문자열로 대체
+            "COALESCE(f.fileName, '')) " +  // null이면 빈 문자열로 대체
             "FROM PollOption o " +
             "LEFT JOIN Vote v ON o.id = v.optionId " +
             "LEFT JOIN FileStorage f ON o.file.id = f.id " +
             "WHERE o.poll.id = :pollId " +
-            "GROUP BY o.pollOptionUid, o.pollOptionText, o.pollOptionSeq, f.fileUid, f.fileFullName")
+            "GROUP BY o.pollOptionUid, o.pollOptionText, o.pollOptionSeq, f.fileUid, f.fileName")
     List<PollOptionResponse> findPollOptionsWithVoteCount(@Param("pollId") Long pollId);
 
 }

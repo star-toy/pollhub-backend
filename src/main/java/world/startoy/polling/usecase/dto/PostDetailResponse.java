@@ -23,7 +23,7 @@ public class PostDetailResponse {
     @NotNull
     private String fileUid;
     @NotNull
-    private String fileFullName;
+    private String fileName;
     @NotNull
     private String createdBy;       // Post.createdBy
     @NotNull

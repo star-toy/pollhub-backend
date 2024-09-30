@@ -14,6 +14,6 @@ public class FileStorageDTO {
     @NotNull
     private String fileUid;
     @NotNull
-    private String fileFullName; // 파일명+uid
+    private String fileName; // 파일명+uid
 
 }

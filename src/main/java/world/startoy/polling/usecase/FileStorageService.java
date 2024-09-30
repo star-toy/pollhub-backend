@@ -1,18 +1,17 @@
 package world.startoy.polling.usecase;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import world.startoy.polling.adapter.repository.FileStorageRepository;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.PostRepository;
 import world.startoy.polling.common.Uploadable;
 import world.startoy.polling.domain.FileStorage;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import world.startoy.polling.usecase.dto.FileStorageDTO;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -47,19 +46,19 @@ public class FileStorageService {
             String fileExtension = getFileExtension(originalFileName);
 
             // 파일 UID를 포함한 새 파일명 생성
-            String fileFullName = String.format("%s_%s.%s",
+            String fileName = String.format("%s_%s.%s",
                     originalFileName.substring(0, originalFileName.lastIndexOf('.')),
                     fileUid,
                     fileExtension);
 
             // S3에 파일 업로드
-            String fileUrl = s3Service.uploadFile(file, fileFullName);
+            String fileUrl = s3Service.uploadFile(file, fileName);
             System.out.println("fileUrl : " + fileUrl);
 
             // FileStorageDTO 생성 및 반환
             return  FileStorageDTO.builder()
                     .fileUid(fileUid)
-                    .fileFullName(fileFullName)
+                    .fileName(fileName)
                     .build();
 
         } catch (FileValidationException e) {
@@ -125,7 +124,7 @@ public class FileStorageService {
     private FileStorageDTO convertToDto(FileStorage fileStorage) {
         return FileStorageDTO.builder()
                 .fileUid(fileStorage.getFileUid())
-                .fileFullName(fileStorage.getFileFullName())
+                .fileName(fileStorage.getFileName())
                 .build();
     }
 
