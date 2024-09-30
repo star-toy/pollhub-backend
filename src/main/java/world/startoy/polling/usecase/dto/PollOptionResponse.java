@@ -18,7 +18,7 @@ public class PollOptionResponse {
     @NotNull
     private String pollOptionText;
     @NotNull
-    private int votedCount; // 득표수
+    private Long votedCount; // 득표수 // JPQL 쿼리에서 COUNT(v.id)는 Long 타입을 반환
     @NotNull
     private String fileUid;
     @NotNull

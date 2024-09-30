@@ -1,6 +1,5 @@
 package world.startoy.polling.usecase;
 
-import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,16 +127,7 @@ public class VoteService {
 
     // pollId로 옵션 정보 및 옵션별 득표수 가져오기
     public List<PollOptionResponse> getVoteCountByPollId(Long pollId) {
-        List<Tuple> results = voteRepository.countVotesByPollId(pollId);
-        return results.stream()
-                .map(tuple -> PollOptionResponse.builder()
-                        .pollOptionUid(tuple.get("pollOptionUid", String.class))
-                        .pollOptionSeq(tuple.get("pollOptionSeq", Integer.class))
-                        .pollOptionText(tuple.get("pollOptionText", String.class))
-                        .votedCount(tuple.get("votedCount", Long.class).intValue()) // Long을 int로 변환
-                        .fileUid(tuple.get("fileUid", String.class))
-                        .fileFullName(tuple.get("fileFullName", String.class))
-                        .build())
-                .collect(Collectors.toList());
+        List<PollOptionResponse> results = voteRepository.findPollOptionsWithVoteCount(pollId);
+        return results;
     }
 }

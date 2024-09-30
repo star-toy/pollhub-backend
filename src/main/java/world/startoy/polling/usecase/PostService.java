@@ -62,15 +62,16 @@ public class PostService {
     }
 
 
-    public Optional<Post> findByPostUid (String postUid){
-        return postRepository.findByPostUid(postUid);
-    }
-
+    // 게시글 상세 조회하기
     public PostDetailResponse getPostDetail(String postUid) {
         Optional<Post> post = findByPostUid(postUid); // PostService를 통해 게시글과 관련된 모든 데이터 조회
         if (post.isEmpty()) return null;
 
         return createPostDetailResponse(post.get());
+    }
+
+    public Optional<Post> findByPostUid(String postUid){
+        return postRepository.findByPostUid(postUid);
     }
 
     private PostDetailResponse createPostDetailResponse(Post post) {
