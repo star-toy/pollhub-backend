@@ -66,20 +66,25 @@ public class PostService {
         return postRepository.findByPostUid(postUid);
     }
 
-    public PostDetailResponse getPostDetail(Post post) {
-        return createPostDetailResponse(post);
+    public PostDetailResponse getPostDetail(String postUid) {
+        Optional<Post> post = findByPostUid(postUid); // PostService를 통해 게시글과 관련된 모든 데이터 조회
+        if (post.isEmpty()) return null;
+
+        return createPostDetailResponse(post.get());
     }
 
     private PostDetailResponse createPostDetailResponse(Post post) {
-
         return PostDetailResponse.builder()
                 .postUid(post.getPostUid())
                 .title(post.getTitle())
-                .createdAt(post.getCreatedAt())
-                .createdBy(post.getCreatedBy())
                 .polls(convertToPollDetailResponses(post.getPolls()))
+                .fileUid(post.getFile() != null ? post.getFile().getFileUid() : null)  // 파일이 없을 때 null 처리
+                .fileFullName(post.getFile() != null ? post.getFile().getFileFullName() : null)  // 파일이 없을 때 null 처리
+                .createdBy(post.getCreatedBy())
+                .createdAt(post.getCreatedAt())
                 .build();
     }
+
 
     private List<PollDetailResponse> convertToPollDetailResponses(List<Poll> polls) {
         return polls.stream()

@@ -17,6 +17,8 @@ public class S3Service {
 
     private final AmazonS3 amazonS3;
 
+    //@Value("${AWS_S3_BUCKET:#{null}}")
+    //private String bucket;
 
 
     public String uploadFile(MultipartFile multipartFile, String fileName) throws IOException {
