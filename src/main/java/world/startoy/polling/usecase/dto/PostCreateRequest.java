@@ -15,6 +15,8 @@ public class PostCreateRequest {
     private String title;
     @NotNull
     private List<PollCreateRequest> polls;
+    @NotNull
     private String fileUid;
+    @NotNull
     private String fileName;
 }
