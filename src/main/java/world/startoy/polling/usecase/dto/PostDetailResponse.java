@@ -1,5 +1,6 @@
 package world.startoy.polling.usecase.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +14,19 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PostDetailResponse {
+    @NotNull
     private String postUid;
+    @NotNull
     private String title;
+    @NotNull
     private List<PollDetailResponse> polls;
+    @NotNull
     private String fileUid;
+    @NotNull
     private String fileFullName;
+    @NotNull
     private String createdBy;       // Post.createdBy
+    @NotNull
     private LocalDateTime createdAt;// Post.createdAt
 
 }
