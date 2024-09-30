@@ -1,40 +1,30 @@
 package world.startoy.polling.adapter.controller;
 
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import world.startoy.polling.common.Uploadable;
-import world.startoy.polling.config.CloudFrontConfig;
-import world.startoy.polling.usecase.FileStorageService;
-import world.startoy.polling.usecase.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import world.startoy.polling.usecase.FileStorageService;
 import world.startoy.polling.usecase.dto.FileStorageDTO;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/files")
-@Tag(name = "파일 업로드", description = "파일 업로드 API")
+@Tag(name = "FileStorage", description = "FileStorage API")
 public class FileStorageController {
 
     private final FileStorageService fileStorageService;
-    private final UserService userService;
-    private final CloudFrontConfig cloudFrontConfig;
-    private  FileStorageDTO fileStorageDTO;
 
-
-
-
+    
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<FileStorageDTO> uploadFile(
-            @RequestPart("file") MultipartFile file) {
+    @Operation(summary = "파일 업로드")
+    public ResponseEntity<FileStorageDTO> uploadFile(@RequestPart("file") MultipartFile file) {
 
         try {
             // 파일 유효성 검사
@@ -62,8 +52,8 @@ public class FileStorageController {
     }
 
 
-    // fileUid를 이용하여 파일 URL을 조회하는 엔드포인트
     @GetMapping("/{fileUid}")
+    @Operation(summary = "fileUid를 이용하여 파일 URL을 조회")
     public ResponseEntity<FileStorageDTO> getFileByUid(@PathVariable String fileUid) {
         try {
             FileStorageDTO fileStorageDto = fileStorageService.getFileDtoByUid(fileUid);
@@ -77,4 +67,5 @@ public class FileStorageController {
             return ResponseEntity.status(500).body(null); // 500 Internal Server Error
         }
     }
+    
 }
