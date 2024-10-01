@@ -9,7 +9,6 @@ import world.startoy.polling.adapter.repository.FileStorageRepository;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.PollRepository;
 import world.startoy.polling.adapter.repository.PostRepository;
-import world.startoy.polling.config.CloudFrontConfig;
 import world.startoy.polling.domain.FileStorage;
 import world.startoy.polling.domain.Poll;
 import world.startoy.polling.domain.PollOption;
@@ -32,8 +31,6 @@ public class PostService {
     private final PollOptionRepository pollOptionRepository;
     private final PollService pollService;
     private final VoteService voteService;
-    private final FileStorageService fileStorageService;
-    private final CloudFrontConfig cloudFrontConfig;
     private final FileStorageRepository fileStorageRepository;
 
 
@@ -80,7 +77,7 @@ public class PostService {
                 .title(post.getTitle())
                 .polls(convertToPollDetailResponses(post.getPolls()))
                 .fileUid(post.getFile() != null ? post.getFile().getFileUid() : null)  // 파일이 없을 때 null 처리
-                .fileFullName(post.getFile() != null ? post.getFile().getFileFullName() : null)  // 파일이 없을 때 null 처리
+                .fileName(post.getFile() != null ? post.getFile().getFileName() : null)  // 파일이 없을 때 null 처리
                 .createdBy(post.getCreatedBy())
                 .createdAt(post.getCreatedAt())
                 .build();
@@ -191,7 +188,7 @@ public class PostService {
 
         FileStorage postFile = FileStorage.builder()
                 .fileUid(request.getFileUid())
-                .fileFullName(request.getFileName())
+                .fileName(request.getFileName())
                 .isDeleted(false) // 기본값 설정
                 .createdAt(LocalDateTime.now())
                 .createdBy(createdBy)
@@ -232,7 +229,7 @@ public class PostService {
 
                 FileStorage pollOptionFile = FileStorage.builder()
                         .fileUid(optionReq.getFileUid())
-                        .fileFullName(optionReq.getFileName())
+                        .fileName(optionReq.getFileName())
                         .isDeleted(false) // 기본값 설정
                         .createdAt(LocalDateTime.now())
                         .createdBy(createdBy)

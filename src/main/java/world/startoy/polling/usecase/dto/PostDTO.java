@@ -14,7 +14,7 @@ public class PostDTO {
     private String postUid;
     private String title;
     private String fileUid;
-    private String fileFullName;
+    private String fileName;
     private String createdBy;       // Post.createdBy
     private LocalDateTime createdAt;// Post.createdAt
 }

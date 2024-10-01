@@ -16,7 +16,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAll();
 
-    @Query("SELECT new world.startoy.polling.usecase.dto.PostDTO(p.postUid, p.title, f.fileUid, f.fileFullName, p.createdBy, p.createdAt) " +
+    @Query("SELECT new world.startoy.polling.usecase.dto.PostDTO(p.postUid, p.title, f.fileUid, f.fileName, p.createdBy, p.createdAt) " +
             "FROM Post p LEFT JOIN p.file f")
     List<PostDTO> findAllPostWithFile();
 }

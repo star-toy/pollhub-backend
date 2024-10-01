@@ -22,5 +22,5 @@ public class PollOptionResponse {
     @NotNull
     private String fileUid;
     @NotNull
-    private String fileFullName;
+    private String fileName;
 }
