@@ -24,6 +24,6 @@ public class PostDetailResponse {
     private String createdBy;       // Post.createdBy
     @NotNull
     private LocalDateTime createdAt;// Post.createdAt
-    // 추후 @NotNull 추가해야함
+    @NotNull
     private String imageUrl;
 }
