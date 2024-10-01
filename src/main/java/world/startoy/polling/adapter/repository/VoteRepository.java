@@ -1,5 +1,6 @@
 package world.startoy.polling.adapter.repository;
 
+import com.querydsl.core.Tuple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,19 +18,14 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Vote> findByPollId(Long pollId);
 
     // 투표 옵션 및 득표수 가져오는 쿼리
-    @Query("SELECT new world.startoy.polling.usecase.dto.PollOptionResponse( " +
-            "o.pollOptionUid, " +
-            "o.pollOptionSeq, " +
-            "o.pollOptionText, " +
-            "COUNT(v.id), " +
-            "COALESCE(f.fileUid, ''), " +  // null이면 빈 문자열로 대체
-            "COALESCE(f.fileName, '')) " +  // null이면 빈 문자열로 대체
+    @Query("SELECT new world.startoy.polling.usecase.dto.PollOptionResponse(" +
+            "o.pollOptionUid, o.pollOptionSeq, o.pollOptionText, COUNT(v.id), " +
+            "CASE WHEN f.fileUid IS NULL THEN '' ELSE CONCAT(:cloudFrontUrl, '/', f.fileName) END) " +
             "FROM PollOption o " +
             "LEFT JOIN Vote v ON o.id = v.optionId " +
             "LEFT JOIN FileStorage f ON o.file.id = f.id " +
             "WHERE o.poll.id = :pollId " +
             "GROUP BY o.pollOptionUid, o.pollOptionText, o.pollOptionSeq, f.fileUid, f.fileName")
-    List<PollOptionResponse> findPollOptionsWithVoteCount(@Param("pollId") Long pollId);
-
+    List<PollOptionResponse> findPollOptionsWithVoteCount(@Param("pollId") Long pollId, @Param("cloudFrontUrl") String cloudFrontUrl);
 }
 
