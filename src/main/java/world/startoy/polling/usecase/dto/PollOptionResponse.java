@@ -20,7 +20,5 @@ public class PollOptionResponse {
     @NotNull
     private Long votedCount; // 득표수 // JPQL 쿼리에서 COUNT(v.id)는 Long 타입을 반환
     @NotNull
-    private String fileUid;
-    @NotNull
-    private String fileName;
+    private String imageUrl; // CloudFront URL을 포함한 전체 이미지 URL
 }
