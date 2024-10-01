@@ -21,12 +21,9 @@ public class PostDetailResponse {
     @NotNull
     private List<PollDetailResponse> polls;
     @NotNull
-    private String fileUid;
-    @NotNull
-    private String fileName;
-    @NotNull
     private String createdBy;       // Post.createdBy
     @NotNull
     private LocalDateTime createdAt;// Post.createdAt
-
+    // 추후 @NotNull 추가해야함
+    private String imageUrl;
 }
