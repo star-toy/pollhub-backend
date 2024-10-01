@@ -76,12 +76,12 @@ public class PostService {
     }
 
     private PostDetailResponse createPostDetailResponse(Post post) {
+        String cloudFrontUrl = cloudFrontConfig.getCloudfrontUrl();
         return PostDetailResponse.builder()
                 .postUid(post.getPostUid())
                 .title(post.getTitle())
                 .polls(convertToPollDetailResponses(post.getPolls()))
-                .fileUid(post.getFile() != null ? post.getFile().getFileUid() : null)  // 파일이 없을 때 null 처리
-                .fileName(post.getFile() != null ? post.getFile().getFileName() : null)  // 파일이 없을 때 null 처리
+                .imageUrl(cloudFrontUrl+"/"+(post.getFile() != null ? post.getFile().getFileName() : null))
                 .createdBy(post.getCreatedBy())
                 .createdAt(post.getCreatedAt())
                 .build();
