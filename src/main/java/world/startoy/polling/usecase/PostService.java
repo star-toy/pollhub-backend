@@ -9,6 +9,7 @@ import world.startoy.polling.adapter.repository.FileStorageRepository;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.PollRepository;
 import world.startoy.polling.adapter.repository.PostRepository;
+import world.startoy.polling.config.CloudFrontConfig;
 import world.startoy.polling.domain.FileStorage;
 import world.startoy.polling.domain.Poll;
 import world.startoy.polling.domain.PollOption;
@@ -32,6 +33,7 @@ public class PostService {
     private final PollService pollService;
     private final VoteService voteService;
     private final FileStorageRepository fileStorageRepository;
+    private final CloudFrontConfig cloudFrontConfig;
 
 
     // 게시글 전체 가져오기
@@ -42,7 +44,9 @@ public class PostService {
 
     // 모든 게시글 조회 (홈화면 보여질 부분)
     public PostListResponse getPostListResponse() {
-        List<PostDTO> postDTOList = postRepository.findAllPostWithFile();
+        String cloudFrontUrl = cloudFrontConfig.getCloudfrontUrl();
+        List<PostDTO> postDTOList = postRepository.findAllPostWithFile(cloudFrontUrl);
+
         return new PostListResponse(postDTOList);
     }
 
