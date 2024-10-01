@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 public class PostDTO {
     private String postUid;
     private String title;
-    private String fileUid;
-    private String fileName;
     private String createdBy;       // Post.createdBy
     private LocalDateTime createdAt;// Post.createdAt
+    private String imageUrl;
+
 }
