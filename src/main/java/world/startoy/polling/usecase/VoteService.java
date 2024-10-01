@@ -1,10 +1,12 @@
 package world.startoy.polling.usecase;
 
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import world.startoy.polling.adapter.repository.PollOptionRepository;
 import world.startoy.polling.adapter.repository.VoteRepository;
+import world.startoy.polling.config.CloudFrontConfig;
 import world.startoy.polling.domain.Poll;
 import world.startoy.polling.domain.PollOption;
 import world.startoy.polling.domain.Vote;
@@ -16,6 +18,7 @@ import world.startoy.polling.usecase.dto.VoteCreateResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,7 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final PollOptionRepository pollOptionRepository; // PollOption 데이터를 가져오기 위한 Repository
     private final PollService pollService;
+    private final CloudFrontConfig cloudFrontConfig;
 
 
     // 투표
@@ -127,7 +131,8 @@ public class VoteService {
 
     // pollId로 옵션 정보 및 옵션별 득표수 가져오기
     public List<PollOptionResponse> getVoteCountByPollId(Long pollId) {
-        List<PollOptionResponse> results = voteRepository.findPollOptionsWithVoteCount(pollId);
+        String cloudFrontUrl = cloudFrontConfig.getCloudfrontUrl();
+        List<PollOptionResponse> results =  voteRepository.findPollOptionsWithVoteCount(pollId, cloudFrontUrl);
         return results;
     }
 }
