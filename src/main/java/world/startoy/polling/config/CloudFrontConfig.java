@@ -1,6 +1,5 @@
 package world.startoy.polling.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,5 +10,9 @@ public class CloudFrontConfig {
     
     public String getCloudfrontUrl() {
         return cloudfrontUrl;
+    }
+
+    public String getCloudfrontUrl(String fileName) {
+        return cloudfrontUrl.concat("/").concat(fileName);
     }
 }
