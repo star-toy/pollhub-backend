@@ -35,6 +35,18 @@ public class PostController {
     }
 
 
+    @GetMapping("/new/{postUid}")
+    @Operation(summary = "WIP 특정 UID의 게시글 상세 조회")
+    public ResponseEntity<PostDetailResponse> getPostByUid(
+            @PathVariable String postUid,
+            HttpServletRequest httpRequest) {
+        String userIp = userService.getClientIp(httpRequest);
+        return postService.findPostDetailResponseByPostUid(postUid, userIp) // Optional<PostDetailResponse> 처리
+                .map(ResponseEntity::ok)  // PostDetailResponse가 존재할 경우 200 OK 반환
+                .orElse(ResponseEntity.notFound().build()); // 없으면 404 Not Found 반환
+    }
+
+
     @GetMapping("/{postUid}")
     @Operation(summary = "특정 UID의 게시글 상세 조회")
     public ResponseEntity<PostDetailResponse> getPostByUid(@PathVariable String postUid) {
