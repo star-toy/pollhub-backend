@@ -52,45 +52,6 @@ public class PostService {
     }
 
 
-    // 게시글 상세 조회하기
-    public Optional<PostDetailResponse> getPostDetail(String postUid) {
-        return postRepository.findByPostUid(postUid)
-                .map(this::createPostDetailResponse);
-    }
-
-    private PostDetailResponse createPostDetailResponse(Post post) {
-        String imageUrl = post.getFile() != null ? cloudFrontConfig.getCloudfrontUrl(post.getFile().getFileName()) : null;
-
-        return PostDetailResponse.builder()
-                .postUid(post.getPostUid())
-                .title(post.getTitle())
-                .polls(convertToPollDetailResponses(post.getPolls()))
-                .imageUrl(imageUrl)
-                .createdBy(post.getCreatedBy())
-                .createdAt(post.getCreatedAt())
-                .build();
-    }
-
-    private List<PollDetailResponse> convertToPollDetailResponses(List<Poll> polls) {
-        return polls.stream()
-                .map(this::getPollDetailResponse)  // 각 Poll을 PollDetailResponse로 변환
-                .collect(Collectors.toList());  // 변환된 PollDetailResponse 리스트로 수집
-    }
-
-    private PollDetailResponse getPollDetailResponse(Poll poll) {
-        // pollId로부터 득표 정보를 가져오는 부분 추가
-        List<PollOptionResponse> pollOptionResponses = voteService.getVoteCountByPollId(poll.getId());
-
-        return PollDetailResponse.builder()
-                .pollUid(poll.getPollUid())
-                .pollSeq(poll.getPollSeq())
-                .pollCategory(poll.getPollCategory())
-                .pollDescription(poll.getPollDescription())
-                .pollOptions(pollOptionResponses)  // PollOptionResponse 사용
-                .build();
-    }
-
-
     // 게시글 상세 조회 + 옵션별 득표수 + 사용자 투표 옵션(사용자 투표 여부)
     public Optional<PostDetailResponse> findPostDetailResponseByPostUid(String postUid, String voterIp) {
         // Native SQL Query 작성
