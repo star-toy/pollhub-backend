@@ -37,12 +37,13 @@ public class PostController {
 
     @GetMapping("/{postUid}")
     @Operation(summary = "특정 UID의 게시글 상세 조회")
-    public ResponseEntity<PostDetailResponse> getPostByUid(@PathVariable String postUid) {
-        PostDetailResponse response = postService.getPostDetail(postUid);
-
-        if (response == null) return ResponseEntity.notFound().build(); // 게시글이 존재하지 않을 경우 404 Not Found 응답
-
-        return ResponseEntity.ok(response); // 게시글이 존재할 경우 200 OK와 함께 게시글 데이터 응답
+    public ResponseEntity<PostDetailResponse> getPostByUid(
+            @PathVariable String postUid,
+            HttpServletRequest httpRequest) {
+        String userIp = userService.getClientIp(httpRequest);
+        return postService.findPostDetailResponseByPostUid(postUid, userIp) // Optional<PostDetailResponse> 처리
+                .map(ResponseEntity::ok)  // PostDetailResponse가 존재할 경우 200 OK 반환
+                .orElse(ResponseEntity.notFound().build()); // 없으면 404 Not Found 반환
     }
 
 
@@ -57,4 +58,3 @@ public class PostController {
     }
 
 }
-
