@@ -35,6 +35,8 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Gradle 빌드
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }} # Sentry 인증 토큰 전달
         run: ./gradlew clean build --scan
 
       - name: 빌드 디렉토리 확인
@@ -84,6 +86,8 @@ jobs:
         run: chmod +x ./gradlew
         
       - name: Gradle 빌드 (deploy job에서)
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }} # Sentry 인증 토큰 전달
         run: ./gradlew clean build --scan
         #working-directory: ./polling-backend # 빌드할 디렉토리 설정
 
