@@ -64,11 +64,7 @@ jobs:
            debug: true
            timeout: 300s
            script: |
-            pgrep -a java > java_processes.txt
-            cat java_processes.txt
-
             pids=$(pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar")
-            echo "PID 목록: $pids"
 
             if [ -n "$pids" ]; then
               for pid in $pids; do
