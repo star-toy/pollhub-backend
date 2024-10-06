@@ -56,16 +56,17 @@ jobs:
       
       - name: 실행 중인 jar 파일 종료
         uses: appleboy/ssh-action@v1.1.0
+        continue-on-error: true
         with:
            host: ${{ secrets.LIGHTSAIL_HOST_DEV }}
            username: ubuntu
            key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
            debug: true
-           continue-on-error: true
            timeout: 300s
            script: |
             pids=$(pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar")
             echo "PID 목록: $pids"
+            pgrep -a java
 
             if [ -n "$pids" ]; then
               for pid in $pids; do
