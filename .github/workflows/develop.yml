@@ -61,44 +61,14 @@ jobs:
            username: ubuntu
            key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
            debug: true
+           continue-on-error: true
            timeout: 300s
            script: |
             pids=$(pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar")
-            echo "검색된 PID 목록: $pids"
+            echo "PID 목록: $pids"
 
             if [ -n "$pids" ]; then
               for pid in $pids; do
-                echo "프로세스 $pid 종료 시도 (Graceful shutdown 고려)"
                 kill -15 $pid
-                
-                # Graceful shutdown을 위한 대기
-                for i in {1..60}; do  # 최대 60초 대기
-                  if ! ps -p $pid > /dev/null 2>&1; then
-                    echo "프로세스 $pid가 정상적으로 종료되었습니다 (${i}초 경과)"
-                    break
-                  fi
-                  echo "프로세스 $pid 종료 대기 중... (${i}초 경과)"
-                  sleep 1
-                done
-                
-                # 60초 후에도 종료되지 않았다면 경고 메시지 출력
-                if ps -p $pid > /dev/null 2>&1; then
-                  echo "경고: 프로세스 $pid가 60초 후에도 실행 중입니다."
-                  echo "수동 확인이 필요할 수 있습니다."
-                fi
               done
-
-              # 모든 프로세스 종료 확인
-              remaining_pids=$(pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar")
-
-              if [ -n "$remaining_pids" ]; then
-                echo "경고: 다음 프로세스가 여전히 실행 중입니다: $remaining_pids"
-                echo "수동 확인이 필요합니다."
-              else
-                echo "모든 대상 프로세스가 종료되었습니다."
-              fi
-            else
-              echo "실행 중인 애플리케이션 프로세스가 없습니다."
             fi
-
-            exit 0
