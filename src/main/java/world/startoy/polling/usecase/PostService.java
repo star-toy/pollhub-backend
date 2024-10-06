@@ -65,7 +65,7 @@ public class PostService {
                 "LEFT JOIN pl_file_storage ppf ON pp.file_id = ppf.file_id " +
                 "LEFT JOIN pl_poll pp2 ON pp.post_id = pp2.post_id " +
                 "LEFT JOIN pl_poll_option ppo ON pp2.poll_id = ppo.poll_id " +
-                "LEFT JOIN pl_file_storage pof ON pp.file_id = pof.file_id " +
+                "LEFT JOIN pl_file_storage pof ON ppo.file_id = pof.file_id " +
                 "LEFT JOIN pl_vote pv ON pv.poll_id = pp2.poll_id AND pv.option_id = ppo.poll_option_id " +
                 "WHERE pp.post_uid = ?1 " + // 위치 기반 파라미터 postUid
                 "GROUP BY ppo.poll_option_uid";
