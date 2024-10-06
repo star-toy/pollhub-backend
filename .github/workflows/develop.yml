@@ -136,7 +136,7 @@ jobs:
         with:
           host: ${{ secrets.LIGHTSAIL_HOST_DEV }}
           username: ubuntu
-          key: ${{ secrets.LIGHTSAIL_SSH_KEY_DEV }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
 
           script: |
             java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar > /home/ubuntu/polling-backend/github/workspace/build/libs/app.log 2>&1 &
