@@ -5,7 +5,6 @@ on:
     branches: ['develop']
 
 jobs:
-  # 빌드 및 테스트 Job
   build:
     runs-on: ubuntu-latest
 
@@ -36,7 +35,7 @@ jobs:
 
       - name: Gradle 빌드
         env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }} # Sentry 인증 토큰 전달
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: ./gradlew clean build --scan
 
       - name: 빌드 디렉토리 확인
@@ -45,23 +44,19 @@ jobs:
       - name: 빌드 결과 확인
         run: ls -la build/libs/
 
-      # 테스트 실행 (MySQL 서비스에 연결)
       - name: 테스트 실행
         env:
            SPRING_PROFILES_ACTIVE: test
            SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/polling?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
            SPRING_DATASOURCE_USERNAME: polling
            SPRING_DATASOURCE_PASSWORD: polling
-        run: ./gradlew test --scan # --scan 옵션 추가
+        run: ./gradlew test --scan
 
 
-  # 배포 Job
   deploy:
-    needs: build # build job이 성공해야 deploy가 실행됨
+    needs: build
     runs-on: ubuntu-latest
-    #if: github.ref == 'refs/heads/main' # main 브랜치에만 배포
 
-          
     steps:
       - name: 리포지토리 체크아웃
         uses: actions/checkout@v2
@@ -79,50 +74,45 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: 현재 작업 디렉토리 확인
-        run: pwd # 현재 작업 디렉토리 확인 ( /home/runner/work/polling-backend/polling-backend )
-
-      - name: Gradle Wrapper에 실행 권한 추가
-        run: chmod +x ./gradlew
-        
-      - name: Gradle 빌드 (deploy job에서)
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }} # Sentry 인증 토큰 전달
-        run: ./gradlew clean build --scan
-        #working-directory: ./polling-backend # 빌드할 디렉토리 설정
-
       - name: 빌드 디렉토리 확인
-        run: ls -la /home/runner/work/polling-backend/polling-backend/build/ # 절대 경로 사용
+        run: ls -la /home/runner/work/polling-backend/polling-backend/build/
 
       - name: 빌드 결과 확인
-        run: ls -la /home/runner/work/polling-backend/polling-backend/build/libs/ # 절대 경로 사용
+        run: ls -la /home/runner/work/polling-backend/polling-backend/build/libs/
 
-      
       - name: JAR 파일 전송
-        uses: appleboy/scp-action@v0.1.3 # master -> 버전 명시
+        uses: appleboy/scp-action@v1.1.0
         with:
           host: ${{ secrets.LIGHTSAIL_HOST_DEV }}
           username: ubuntu
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-          source: '/home/runner/work/polling-backend/polling-backend/build/libs/polling-0.0.1-SNAPSHOT.jar' # 절대 경로 사용
+          source: '/home/runner/work/polling-backend/polling-backend/build/libs/polling-0.0.1-SNAPSHOT.jar'
           target: '/home/ubuntu/polling-backend'
-          overwrite: true # 파일 덮어쓰기 허용
-          debug: true # 디버그 모드 활성화
-          timeout: 150s # 타임아웃 시간 증가
+          overwrite: true
+          debug: true
+          timeout: 300s
       
 
       - name: 실행 중인 jar 파일 종료
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.1.0
         with:
            host: ${{ secrets.LIGHTSAIL_HOST_DEV }}
            username: ubuntu
            key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-           script: |
-             if pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar"; then 
-               echo "애플리케이션 프로세스를 종료합니다."
-               pkill -f 'java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar'
-             else
-               echo "실행 중인 애플리케이션 프로세스가 없습니다."
-             fi
-
            debug: true
+           timeout: 300s
+           script: |
+            if pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar"; then
+              echo "애플리케이션 프로세스를 종료합니다."
+              pkill -f 'java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar'
+              if [ $? -eq 0 ] || [ $? -eq 143 ]; then
+                echo "프로세스가 성공적으로 종료되었습니다."
+                exit 0
+              else
+                echo "프로세스 종료 중 오류가 발생했습니다."
+                exit 1
+              fi
+            else
+              echo "실행 중인 애플리케이션 프로세스가 없습니다."
+              exit 0
+            fi
