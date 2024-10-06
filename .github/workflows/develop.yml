@@ -67,7 +67,7 @@ jobs:
            debug: true
            timeout: 300s
            script: |
-            pid=$(pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar")
+            pids=$(pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar")
             echo "검색된 PID 목록: $pids"
 
             if [ -n "$pid" ]; then
