@@ -81,7 +81,7 @@ jobs:
         run: ls -la /home/runner/work/polling-backend/polling-backend/build/libs/
 
       - name: JAR 파일 전송
-        uses: appleboy/scp-action@v1.1.0
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.LIGHTSAIL_HOST_DEV }}
           username: ubuntu
