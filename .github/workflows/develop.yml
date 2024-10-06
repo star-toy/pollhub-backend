@@ -117,7 +117,8 @@ jobs:
            script: |
             if pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar"; then
               echo "애플리케이션 프로세스를 종료합니다."
-              pkill -f 'java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar'; then
+              pkill -f 'java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar'
+              echo "pkill 종료 코드: $?"
               exit 0
             else
               echo "실행 중인 애플리케이션 프로세스가 없습니다."
