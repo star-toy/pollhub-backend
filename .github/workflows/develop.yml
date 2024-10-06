@@ -116,7 +116,8 @@ jobs:
            timeout: 300s
            script: |
             if pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar"; then
-              PKILL_EXIT_CODE=$?  # pkill의 종료 코드를 저장
+              pkill -f 'java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar'
+              PKILL_EXIT_CODE=$?
 
               if [ $PKILL_EXIT_CODE -eq 0 ]; then
                 echo "프로세스가 성공적으로 종료되었습니다."
