@@ -116,11 +116,18 @@ jobs:
            timeout: 300s
            script: |
             if pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar"; then
-              echo "애플리케이션 프로세스를 종료합니다."
-              pkill -f 'java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar'
-              echo "pkill 종료 코드: $?"
-              exit 0
+              PKILL_EXIT_CODE=$?  # pkill의 종료 코드를 저장
+
+              if [ $PKILL_EXIT_CODE -eq 0 ]; then
+                echo "프로세스가 성공적으로 종료되었습니다."
+              elif [ $PKILL_EXIT_CODE -eq 143 ]; then
+                echo "프로세스가 정상적으로 종료되었습니다 (SIGTERM)."
+              else
+                echo "프로세스 종료 중 오류가 발생했습니다. 종료 코드: $PKILL_EXIT_CODE"
+                exit 1  # 다른 오류가 발생한 경우에만 종료
+              fi
+              exit 0  # 정상 종료
             else
               echo "실행 중인 애플리케이션 프로세스가 없습니다."
-              exit 0
+              exit 0  # 애플리케이션이 실행 중이지 않은 경우도 정상 종료
             fi
