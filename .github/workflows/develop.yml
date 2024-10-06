@@ -67,9 +67,15 @@ jobs:
            debug: true
            timeout: 300s
            script: |
-              if pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar" > /dev/null; then
-                echo "애플리케이션 프로세스를 종료합니다."
-                pkill -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar"
-              else
-                echo "실행 중인 애플리케이션 프로세스가 없습니다."
-              fi
+            pid=$(pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar")
+            echo "검색된 PID 목록: $pids"
+
+            if [ -n "$pid" ]; then
+              kill $pid
+            else
+              echo "실행 중인 애플리케이션 프로세스가 없습니다."
+            fi
+
+      - name: kill이 이루어졌을 때에 exit 0
+        if: failure()
+        run: exit 0
