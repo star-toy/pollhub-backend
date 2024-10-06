@@ -116,7 +116,7 @@ jobs:
         with:
            host: ${{ secrets.LIGHTSAIL_HOST_DEV }}
            username: ubuntu
-           key: ${{ secrets.LIGHTSAIL_SSH_KEY_DEV }}
+           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
            script: |
              if pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar"; then 
                echo "애플리케이션 프로세스를 종료합니다."
