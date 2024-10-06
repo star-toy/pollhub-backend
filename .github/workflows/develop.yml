@@ -1,13 +1,10 @@
 name: Develop Deploy
-
 on:
   push:
     branches: ['develop']
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     services:
       mysql:
         image: mysql:latest
@@ -19,9 +16,8 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=5
-
     steps:
-      - name: 리포지토리 체크아웃
+      - name: Repository 체크아웃
         uses: actions/checkout@v2
 
       - name: JDK 설치
@@ -60,7 +56,6 @@ jobs:
       
       - name: 실행 중인 jar 파일 종료
         uses: appleboy/ssh-action@v1.1.0
-        continue-on-error: true
         with:
            host: ${{ secrets.LIGHTSAIL_HOST_DEV }}
            username: ubuntu
@@ -68,17 +63,42 @@ jobs:
            debug: true
            timeout: 300s
            script: |
-            if pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar"; then
-              echo "애플리케이션 프로세스를 종료합니다."
-              pkill -f 'java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar'
-              if [ $? -eq 0 ] || [ $? -eq 143 ]; then
-                echo "프로세스가 성공적으로 종료되었습니다."
-                exit 0
+            pids=$(pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar")
+            echo "검색된 PID 목록: $pids"
+
+            if [ -n "$pids" ]; then
+              for pid in $pids; do
+                echo "프로세스 $pid 종료 시도 (Graceful shutdown 고려)"
+                kill -15 $pid
+                
+                # Graceful shutdown을 위한 대기
+                for i in {1..60}; do  # 최대 60초 대기
+                  if ! ps -p $pid > /dev/null 2>&1; then
+                    echo "프로세스 $pid가 정상적으로 종료되었습니다 (${i}초 경과)"
+                    break
+                  fi
+                  echo "프로세스 $pid 종료 대기 중... (${i}초 경과)"
+                  sleep 1
+                done
+                
+                # 60초 후에도 종료되지 않았다면 경고 메시지 출력
+                if ps -p $pid > /dev/null 2>&1; then
+                  echo "경고: 프로세스 $pid가 60초 후에도 실행 중입니다."
+                  echo "수동 확인이 필요할 수 있습니다."
+                fi
+              done
+
+              # 모든 프로세스 종료 확인
+              remaining_pids=$(pgrep -f "java -jar /home/ubuntu/polling-backend/github/workspace/build/libs/polling-0.0.1-SNAPSHOT.jar")
+
+              if [ -n "$remaining_pids" ]; then
+                echo "경고: 다음 프로세스가 여전히 실행 중입니다: $remaining_pids"
+                echo "수동 확인이 필요합니다."
               else
-                echo "프로세스 종료 중 오류가 발생했습니다."
-                exit 1
+                echo "모든 대상 프로세스가 종료되었습니다."
               fi
             else
               echo "실행 중인 애플리케이션 프로세스가 없습니다."
-              exit 0
             fi
+
+            exit 0
